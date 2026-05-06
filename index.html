@@ -4,41 +4,41 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>R&V Vitality | Prime v4.2</title>
-
+    
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#050505">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-
+    
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
-
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet">
-
+    
     <style>
-        :root {
-            --p-orange: #FF4500;
-            --p-purple: #9D00FF;
+        :root { 
+            --p-orange: #FF4500; 
+            --p-purple: #9D00FF; 
             --p-cyan: #00E5FF;
-            --p-bg: #050505;
+            --p-bg: #050505; 
             --c-base: #0D0D0D;
             --c-surface: #141414;
             --c-border: #222222;
             --text-main: #F8FAFC;
             --text-muted: #64748B;
         }
-
-        body {
-            background-color: var(--p-bg);
-            color: var(--text-main);
-            font-family: 'Inter', sans-serif;
-            overflow-x: hidden;
+        
+        body { 
+            background-color: var(--p-bg); 
+            color: var(--text-main); 
+            font-family: 'Inter', sans-serif; 
+            overflow-x: hidden; 
             margin: 0;
         }
-
+        
         /* === ESTILOS LOGIN === */
         .login-card { border-radius: 28px; background: var(--c-base); border: 1px solid var(--c-border); box-shadow: 0 20px 50px rgba(0,0,0,0.8); position: relative; overflow: hidden; }
         .login-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: linear-gradient(90deg, var(--p-orange), var(--p-cyan), var(--p-purple)); }
@@ -47,7 +47,7 @@
         .btn-login:active { transform: scale(0.98); }
         .glow-bg { position: absolute; width: 300px; height: 300px; background: radial-gradient(circle, rgba(0,229,255,0.1) 0%, rgba(0,0,0,0) 70%); top: -100px; right: -100px; z-index: -1; pointer-events: none; }
         .glow-bg-2 { position: absolute; width: 300px; height: 300px; background: radial-gradient(circle, rgba(255,69,0,0.05) 0%, rgba(0,0,0,0) 70%); bottom: -100px; left: -100px; z-index: -1; pointer-events: none; }
-
+        
         /* === ESTILOS APP === */
         .card-base { border-radius: 28px; background: var(--c-base); border: 1px solid var(--c-border); transition: all 0.3s ease; }
         .card-water { border-left: 4px solid var(--p-cyan); }
@@ -59,29 +59,29 @@
 
         .btn-prime { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; border: none; }
         .btn-prime:active { scale: 0.95; }
-
+        
         .progress-container { height: 8px; background: var(--c-surface); border-radius: 12px; overflow: hidden; border: 1px solid var(--c-border); }
         .progress-fill { height: 100%; border-radius: 12px; transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1); }
-
+        
         input, select { border: 1px solid var(--c-border); padding: 12px; border-radius: 14px; font-weight: 600; font-size: 14px; outline: none; width: 100%; background: var(--c-surface); color: var(--text-main); transition: all 0.3s;}
         #email, #password { padding: 16px; border-radius: 16px; padding-left: 3rem; }
         input:focus, select:focus { border-color: var(--p-cyan); box-shadow: 0 0 0 2px rgba(0,229,255,0.15); }
-
+        
         .cal-day { width: 100%; aspect-ratio: 1/1; display: flex; align-items: center; justify-content: center; border-radius: 12px; font-size: 11px; font-weight: 800; cursor: pointer; transition: all 0.2s; position: relative; background: var(--c-surface); border: 1px solid var(--c-border); color: var(--text-muted); }
         .cal-day:hover { border-color: #444; color: var(--text-main); }
         .cal-day.selected { background: var(--p-orange) !important; color: #fff !important; transform: scale(1.1); z-index: 10; box-shadow: 0 5px 15px rgba(255,69,0,0.3); border: none; }
         .cal-day.selected-rafaela { background: var(--p-purple) !important; color: #fff !important; box-shadow: 0 5px 15px rgba(157,0,255,0.3); border: none; }
-
+        
         .has-log::after { content: ''; position: absolute; bottom: 4px; width: 4px; height: 4px; background: var(--p-orange); border-radius: 50%; }
         .has-water::before { content: ''; position: absolute; top: 4px; left: 4px; width: 4px; height: 4px; background: var(--p-cyan); border-radius: 50%; box-shadow: 0 0 5px var(--p-cyan); }
-
+        
         .streak-fire { filter: drop-shadow(0 0 5px rgba(255, 69, 0, 0.6)); animation: flicker 1.5s infinite alternate; }
         @keyframes flicker { from { opacity: 0.8; transform: scale(1); } to { opacity: 1; transform: scale(1.1); } }
-
+        
         #pantry-render::-webkit-scrollbar { width: 4px; }
         #pantry-render::-webkit-scrollbar-thumb { background: #444; border-radius: 10px; }
         .water-wave { background: linear-gradient(180deg, #00E5FF 0%, #0077FF 100%); transition: height 0.6s cubic-bezier(0.4, 0, 0.2, 1); opacity: 0.8; }
-
+        
         .macro-filter.active { background: var(--p-orange); color: white; border-color: var(--p-orange); }
         .weight-bar { transition: height 0.5s ease; background: var(--p-orange); width: 8px; border-radius: 4px 4px 0 0; }
 
@@ -89,7 +89,7 @@
         ::-webkit-scrollbar-track { background: var(--p-bg); }
         ::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
         ::-webkit-scrollbar-thumb:hover { background: #555; }
-
+        
         .custom-scroll::-webkit-scrollbar { width: 4px; }
         .custom-scroll::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
     </style>
@@ -150,7 +150,7 @@
                         <div class="flex items-center gap-2">
                             <span class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Couples Evolution v4.2</span>
                             <div id="couple-mode" class="hidden flex items-center gap-1.5 bg-[#1A0033] border border-[#9D00FF] text-[#D400FF] px-3 py-1 rounded-full text-[9px] font-black animate-pulse shadow-[0_0_10px_rgba(157,0,255,0.3)]">
-                                <i data-lucide="heart" class="w-2.5 h-2.5"></i> POWER COUPLE
+                                <i data-lucide="heart" class="w-2.5 h-2.5"></i> POWER COUPLE 
                                 <span class="flex items-center gap-0.5 text-[#FF4500] ml-1 bg-[#0A0014] px-1.5 py-0.5 rounded-md border border-[#FF4500]/30">
                                     <i data-lucide="flame" class="w-2.5 h-2.5 fill-[#FF4500]"></i> <span id="pc-streak">0</span>
                                 </span>
@@ -213,7 +213,7 @@
                                 </label>
                             </div>
                         </div>
-
+                        
                         <div class="space-y-4">
                             <div class="grid grid-cols-2 gap-3 text-[10px] font-black uppercase text-gray-500">
                                 <div class="flex flex-col gap-1">Peso <input type="number" id="calc-weight" value="85"></div>
@@ -251,7 +251,7 @@
                 <div class="lg:col-span-8 space-y-6 order-1 lg:order-2">
                     <section class="card-base card-stats p-8 relative overflow-hidden">
                         <div class="absolute top-4 right-8 text-[10px] font-black text-gray-600 uppercase tracking-widest" id="date-label">CARREGANDO...</div>
-
+                        
                         <button onclick="generateSuggestion()" class="absolute top-4 left-8 flex items-center gap-1.5 px-3 py-1.5 bg-[#141414] border border-[#222] rounded-full text-[9px] font-black text-[#00E5FF] hover:border-[#00E5FF] transition-all uppercase tracking-tighter shadow-sm z-20 cursor-pointer">
                             <i data-lucide="wand-2" class="w-3 h-3"></i> IA Cardápio Inteligente
                         </button>
@@ -408,7 +408,7 @@
             <div class="flex justify-between items-start mb-8">
                 <div>
                     <h2 class="text-4xl font-black uppercase tracking-tighter text-white italic">Script Nutricional</h2>
-                    <p class="text-[10px] text-[#00E5FF] font-black uppercase tracking-widest">Vitality Intelligence Engine</p>
+                    <p class="text-[10px] text-[#00E5FF] font-black uppercase tracking-widest">Vitality Intelligence Engine (via Groq)</p>
                 </div>
                 <button onclick="closeModal('modal-suggestion')" class="p-3 bg-[#111] rounded-2xl text-gray-500 hover:text-white border border-[#222] cursor-pointer">
                     <i data-lucide="x" class="w-6 h-6"></i>
@@ -435,7 +435,7 @@
             appId: "1:489534251004:web:23ae166bdd236b88b95c79",
             measurementId: "G-CP5Q159EWE"
         };
-
+        
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
         const auth = firebase.auth();
@@ -457,13 +457,13 @@
 
         let state = JSON.parse(JSON.stringify(defaultState));
 
-        // --- SISTEMA DE LOGIN ADICIONADO AQUI ---
+        // --- SISTEMA DE LOGIN ---
         document.getElementById('login-form').addEventListener('submit', async (e) => {
-            e.preventDefault(); // Evita o recarregamento da página
+            e.preventDefault();
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
             const errorMsg = document.getElementById('error-msg');
-
+            
             try {
                 errorMsg.classList.add('hidden');
                 await auth.signInWithEmailAndPassword(email, password);
@@ -474,13 +474,13 @@
         });
 
         auth.onAuthStateChanged(user => {
-            if (user) {
-                document.getElementById('login-view').classList.add('hidden');
-                document.getElementById('app-view').classList.remove('hidden');
-                init();
-            } else {
-                document.getElementById('login-view').classList.remove('hidden');
-                document.getElementById('app-view').classList.add('hidden');
+            if (user) { 
+                document.getElementById('login-view').classList.add('hidden'); 
+                document.getElementById('app-view').classList.remove('hidden'); 
+                init(); 
+            } else { 
+                document.getElementById('login-view').classList.remove('hidden'); 
+                document.getElementById('app-view').classList.add('hidden'); 
             }
         });
 
@@ -490,9 +490,9 @@
         }
 
         async function loadState() {
-            try {
-                const doc = await db.collection('rv_vitality').doc('couples_data').get();
-                if (doc.exists) state = doc.data();
+            try { 
+                const doc = await db.collection('rv_vitality').doc('couples_data').get(); 
+                if (doc.exists) state = doc.data(); 
             } catch(e) {}
         }
 
@@ -501,8 +501,8 @@
         }
 
         function updateUI() {
-            const user = state.data[state.user];
-            const logs = user.logs[state.selectedDate] || [];
+            const user = state.data[state.user]; 
+            const logs = user.logs[state.selectedDate] || []; 
             const water = user.waterLogs[state.selectedDate] || 0;
             let curP=0, curC=0, curG=0, curK=0, curF=0;
             logs.forEach(l => { curP+=l.p; curC+=l.c; curG+=l.g; curK+=l.kcal; curF+=(l.f || 0); });
@@ -512,7 +512,7 @@
             document.getElementById('label-c').innerText = `${curC.toFixed(0)}/${user.c}g`;
             document.getElementById('label-g').innerText = `${curG.toFixed(0)}/${user.g}g`;
             document.getElementById('label-f').innerText = `${curF.toFixed(0)}/${user.fMeta}g`;
-
+            
             document.getElementById('bar-p').style.width = Math.min(100, (curP/user.p*100)) + '%';
             document.getElementById('bar-c').style.width = Math.min(100, (curC/user.c*100)) + '%';
             document.getElementById('bar-g').style.width = Math.min(100, (curG/user.g*100)) + '%';
@@ -535,60 +535,52 @@
             lucide.createIcons();
         }
 
-        // === SMART MENU ENGINE (API KEY INTEGRATED) ===
+        // === REFACTURED SMART MENU ENGINE (GROQ API) ===
         async function generateSuggestion() {
-            const user = state.data[state.user];
+            const user = state.data[state.user]; 
             const logs = user.logs[state.selectedDate] || [];
             let curP=0, curC=0, curG=0; logs.forEach(l => { curP+=l.p; curC+=l.c; curG+=l.g; });
             const gapP = Math.max(0, user.p - curP); const gapC = Math.max(0, user.c - curC); const gapG = Math.max(0, user.g - curG);
-
+            
             if (gapP < 5 && gapC < 5) return alert("Meta atingida!");
 
             const content = document.getElementById('sugg-content');
-            content.innerHTML = `<div class="flex flex-col items-center justify-center py-12 text-center"><div class="w-12 h-12 border-4 border-[#00E5FF] border-t-transparent rounded-full animate-spin mb-4"></div><p class="text-xs font-black uppercase text-gray-500 tracking-widest italic">Acessando Vitality Neural...</p></div>`;
+            content.innerHTML = `<div class="flex flex-col items-center justify-center py-12 text-center"><div class="w-12 h-12 border-4 border-[#00E5FF] border-t-transparent rounded-full animate-spin mb-4"></div><p class="text-xs font-black uppercase text-gray-500 tracking-widest italic">Processando via Groq Llama 3...</p></div>`;
             document.getElementById('modal-suggestion').classList.remove('hidden');
 
             const remainingTurns = ['morning', 'lunch', 'dinner'].filter(t => !logs.some(l => l.turno === t));
-            const prompt = `Nutricionista esportivo. Objetivo: Monte cardápio para os turnos [${remainingTurns.join(', ')}]. Macros alvo: P:${gapP.toFixed(1)}g, C:${gapC.toFixed(1)}g, G:${gapG.toFixed(1)}g. LISTA: ${JSON.stringify(state.pantry.map(f => ({n: f.name, p: f.p, c: f.c, g: f.g})))}. Responda APENAS um array JSON: [{"turno": "nome", "alimentos": [{"nome": "item", "peso": gramas}]}]`;
+            
+            // PROMPT OTIMIZADO PARA GROQ
+            const prompt = `Atue como nutricionista esportivo. Objetivo: Sugerir alimentos para os turnos: ${remainingTurns.join(', ')}.
+            Macros restantes a bater: Proteína: ${gapP.toFixed(1)}g, Carboidrato: ${gapC.toFixed(1)}g, Gordura: ${gapG.toFixed(1)}g.
+            Use apenas alimentos desta lista: ${JSON.stringify(state.pantry.map(f => ({n: f.name, p: f.p, c: f.c, g: f.g})))}.
+            Responda obrigatoriamente no formato JSON: {"cardapio": [{"turno": "nome", "alimentos": [{"nome": "item", "peso": gramas}]}]}`;
 
-            // === COLE A SUA CHAVE DENTRO DAS ASPAS ===
-            const API_KEY = "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";
-
-            const URL = "https://openrouter.ai/api/v1/chat/completions";
+            // INSIRA SUA CHAVE DO GROQ ABAIXO
+            const GROQ_API_KEY = "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"; 
 
             try {
-                const response = await fetch(URL, {
+                const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
                     method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${API_KEY}`,
-                        'Content-Type': 'application/json'
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${GROQ_API_KEY}`
                     },
                     body: JSON.stringify({
-                        model: "meta-llama/llama-3.2-3b-instruct:free",
+                        model: "llama3-8b-8192",
                         messages: [{ role: "user", content: prompt }],
-                        temperature: 0.2
+                        temperature: 0.1,
+                        response_format: { type: "json_object" }
                     })
                 });
 
-                if (!response.ok) {
-                    const errorDetails = await response.json();
-                    throw new Error(errorDetails.error?.message || "Falha na Requisição");
-                }
+                if (!response.ok) throw new Error("Erro na API do Groq");
 
-                const data = await response.json();
-                let rawText = data.choices[0].message.content;
+                const result = await response.json();
+                const jsonResponse = JSON.parse(result.choices[0].message.content);
+                const cardapio = jsonResponse.cardapio;
 
-                rawText = rawText.replace(/```json/gi, "").replace(/```/g, "").trim();
-
-                const startIndex = rawText.indexOf("[");
-                const endIndex = rawText.lastIndexOf("]");
-                if (startIndex !== -1 && endIndex !== -1) {
-                    rawText = rawText.substring(startIndex, endIndex + 1);
-                }
-
-                const suggestion = JSON.parse(rawText);
-
-                content.innerHTML = suggestion.map(s => `
+                content.innerHTML = cardapio.map(s => `
                     <div class="bg-[#141414] border border-[#222] p-8 rounded-[2.5rem] relative overflow-hidden mb-4 shadow-xl">
                         <div class="absolute top-0 left-0 w-1.5 h-full bg-[#00E5FF]"></div>
                         <h3 class="text-[10px] font-black uppercase text-[#00E5FF] mb-6 tracking-widest italic">${s.turno.toUpperCase()} SUGERIDO</h3>
@@ -600,19 +592,21 @@
                                 </div>`).join('')}
                         </div>
                     </div>`).join('');
-                document.getElementById('sugg-precision').innerText = "STATUS: ONLINE";
+                
+                document.getElementById('sugg-precision').innerText = "STATUS: ONLINE (GROQ)";
                 lucide.createIcons();
 
             } catch (error) {
                 console.error("ERRO:", error);
-                content.innerHTML = `<div class="bg-red-500/10 border border-red-500/30 p-8 rounded-[2.5rem] text-center"><p class="text-red-500 text-xs font-black uppercase mb-2">Interface Offline</p><p class="text-[9px] text-gray-400 font-bold uppercase italic">${error.message}</p></div>`;
+                content.innerHTML = `<div class="bg-red-500/10 border border-red-500/30 p-8 rounded-[2.5rem] text-center"><p class="text-red-500 text-xs font-black uppercase mb-2">Erro de Conexão IA</p><p class="text-[9px] text-gray-400 font-bold uppercase italic">${error.message}</p></div>`;
             }
         }
 
-        // --- Funções auxiliares mantidas ---
+        // --- FUNÇÕES AUXILIARES ---
         function switchUser(u) { state.user = u; document.documentElement.style.setProperty('--p-orange', u === 'victor' ? '#FF4500' : '#9D00FF'); updateUI(); renderCalendar(); }
         function addWater(ml) { const user = state.data[state.user]; user.waterLogs[state.selectedDate] = (user.waterLogs[state.selectedDate] || 0) + ml; saveState(); updateUI(); }
         function resetWater() { state.data[state.user].waterLogs[state.selectedDate] = 0; saveState(); updateUI(); }
+        
         function renderPantry() {
             const term = document.getElementById('pantry-search').value.toLowerCase();
             let filtered = state.pantry.filter(f => f.name.toLowerCase().includes(term));
@@ -621,8 +615,10 @@
                     <span class="text-[10px] font-black uppercase text-white">${f.name}</span>
                 </div>`).join('');
         }
+        
         function openFood(id) { state.activeFood = state.pantry.find(x => x.id === id); document.getElementById('m-name').innerText = state.activeFood.name; document.getElementById('modal').classList.remove('hidden'); }
         function openAddFoodModal() { document.getElementById('modal-food').classList.remove('hidden'); }
+        
         function saveNewFood() {
             const name = document.getElementById('new-food-name').value;
             const p = parseFloat(document.getElementById('new-food-p').value) || 0;
@@ -631,15 +627,18 @@
             const f = parseFloat(document.getElementById('new-food-f').value) || 0;
             if(!name) return; state.pantry.push({ id: Date.now(), name, p, c, g, f }); saveState(); renderPantry(); closeModal('modal-food');
         }
+        
         function confirmLog() {
             const g = parseFloat(document.getElementById('m-grams').value); if(!g) return;
             const factor = g/100; if(!state.data[state.user].logs[state.selectedDate]) state.data[state.user].logs[state.selectedDate] = [];
             state.data[state.user].logs[state.selectedDate].push({ logId: Date.now().toString(), name: state.activeFood.name, turno: state.selectedTurno, weight: g, p: state.activeFood.p * factor, c: state.activeFood.c * factor, g: state.activeFood.g * factor, f: (state.activeFood.f || 0) * factor, kcal: (state.activeFood.p*4 + state.activeFood.c*4 + state.activeFood.g*9)*factor });
             saveState(); updateUI(); closeModal('modal');
         }
+        
         function deleteLog(id) { state.data[state.user].logs[state.selectedDate] = state.data[state.user].logs[state.selectedDate].filter(l => l.logId !== id); saveState(); updateUI(); }
         function calculateStreak(u) { return state.data[u].streak || 0; }
-        function setTurno(t, btn) { state.selectedTurno = t; document.querySelectorAll('.turno-btn').forEach(b => b.classList.replace('bg-[#1A1A1A]', 'bg-[#0D0D0D]')); btn.classList.replace('bg-[#0D0D0D]', 'bg-[#1A1A1A]'); }
+        function setTurno(t, btn) { state.selectedTurno = t; document.querySelectorAll('.turno-btn').forEach(b => { b.classList.replace('bg-[#1A1A1A]', 'bg-[#0D0D0D]'); b.classList.remove('border-[#FF4500]'); }); btn.classList.replace('bg-[#0D0D0D]', 'bg-[#1A1A1A]'); btn.classList.add('border-[#FF4500]'); }
+        
         function updateMCalc() {
             const factor = (document.getElementById('m-grams').value || 0) / 100;
             document.getElementById('m-p').innerText = (state.activeFood.p * factor).toFixed(1);
@@ -648,6 +647,7 @@
             document.getElementById('m-f').innerText = ((state.activeFood.f || 0) * factor).toFixed(1);
             document.getElementById('m-kcal').innerText = ((state.activeFood.p*4 + state.activeFood.c*4 + state.activeFood.g*9)*factor).toFixed(0);
         }
+        
         function renderCalendar() {
             const grid = document.getElementById('calendar-grid'); grid.innerHTML = '';
             const days = new Date(state.currentYear, state.currentMonth + 1, 0).getDate();
@@ -656,10 +656,17 @@
                 grid.innerHTML += `<div onclick="state.selectedDate='${ds}'; updateUI(); renderCalendar();" class="cal-day ${state.selectedDate===ds ? 'selected' : ''}">${d}</div>`;
             }
         }
+        
         function changeMonth(o) { state.currentMonth += o; if(state.currentMonth>11){state.currentMonth=0;state.currentYear++} if(state.currentMonth<0){state.currentMonth=11;state.currentYear--} updateMonthDisplay(); renderCalendar(); }
         function updateMonthDisplay() { const d = new Date(state.currentYear, state.currentMonth); document.getElementById('current-month-display').innerText = d.toLocaleString('pt-br', {month:'short', year:'numeric'}); }
         function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
         function logout() { auth.signOut(); }
+
+        // Inicializar Setup UI se necessário
+        function calculateBodyMetas() {
+            alert("Setup Sincronizado!");
+            saveState();
+        }
 
     </script>
 </body>
