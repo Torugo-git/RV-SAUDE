@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>R&V Vitality | Prime v4.2</title>
+    
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#050505">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root { 
+            --p-orange: #FF4500; 
+            --p-purple: #9D00FF; 
+            --p-cyan: #00E5FF;
+            --p-bg: #050505; 
+            --c-base: #0D0D0D;
+            --c-surface: #141414;
+            --c-border: #222222;
+            --text-main: #F8FAFC;
+            --text-muted: #64748B;
+        }
+        
+        body { 
+            background-color: var(--p-bg); 
+            color: var(--text-main); 
+            font-family: 'Inter', sans-serif; 
+            overflow-x: hidden; 
+            margin: 0;
+        }
+        
+        /* === ESTILOS LOGIN === */
+        .login-card { border-radius: 28px; background: var(--c-base); border: 1px solid var(--c-border); box-shadow: 0 20px 50px rgba(0,0,0,0.8); position: relative; overflow: hidden; }
+        .login-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: linear-gradient(90deg, var(--p-orange), var(--p-cyan), var(--p-purple)); }
+        .btn-login { background: linear-gradient(45deg, var(--p-orange), #FF6B00); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; text-transform: uppercase; font-weight: 900; letter-spacing: 1px; border: none; }
+        .btn-login:hover { box-shadow: 0 0 20px rgba(255,69,0,0.4); transform: translateY(-2px); }
+        .btn-login:active { transform: scale(0.98); }
+        .glow-bg { position: absolute; width: 300px; height: 300px; background: radial-gradient(circle, rgba(0,229,255,0.1) 0%, rgba(0,0,0,0) 70%); top: -100px; right: -100px; z-index: -1; pointer-events: none; }
+        .glow-bg-2 { position: absolute; width: 300px; height: 300px; background: radial-gradient(circle, rgba(255,69,0,0.05) 0%, rgba(0,0,0,0) 70%); bottom: -100px; left: -100px; z-index: -1; pointer-events: none; }
+        
+        /* === ESTILOS APP === */
+        .card-base { border-radius: 28px; background: var(--c-base); border: 1px solid var(--c-border); transition: all 0.3s ease; }
+        .card-water { border-left: 4px solid var(--p-cyan); }
+        .card-calc { border-left: 4px solid #444; }
+        .card-stats { border-top: 4px solid var(--p-orange); box-shadow: 0 10px 40px rgba(0,0,0,0.8); }
+        .card-pantry { border-left: 4px solid var(--p-orange); }
+        .card-calendar { border-left: 4px solid var(--p-purple); }
+        .card-meals { border-top: 4px solid var(--c-border); }
+
+        .btn-prime { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; border: none; }
+        .btn-prime:active { scale: 0.95; }
+        
+        .progress-container { height: 8px; background: var(--c-surface); border-radius: 12px; overflow: hidden; border: 1px solid var(--c-border); }
+        .progress-fill { height: 100%; border-radius: 12px; transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1); }
+        
+        input, select { border: 1px solid var(--c-border); padding: 12px; border-radius: 14px; font-weight: 600; font-size: 14px; outline: none; width: 100%; background: var(--c-surface); color: var(--text-main); transition: all 0.3s;}
+        #email, #password { padding: 16px; border-radius: 16px; padding-left: 3rem; }
+        input:focus, select:focus { border-color: var(--p-cyan); box-shadow: 0 0 0 2px rgba(0,229,255,0.15); }
+        
+        .cal-day { width: 100%; aspect-ratio: 1/1; display: flex; align-items: center; justify-content: center; border-radius: 12px; font-size: 11px; font-weight: 800; cursor: pointer; transition: all 0.2s; position: relative; background: var(--c-surface); border: 1px solid var(--c-border); color: var(--text-muted); }
+        .cal-day:hover { border-color: #444; color: var(--text-main); }
+        .cal-day.selected { background: var(--p-orange) !important; color: #fff !important; transform: scale(1.1); z-index: 10; box-shadow: 0 5px 15px rgba(255,69,0,0.3); border: none; }
+        .cal-day.selected-rafaela { background: var(--p-purple) !important; color: #fff !important; box-shadow: 0 5px 15px rgba(157,0,255,0.3); border: none; }
+        
+        .has-log::after { content: ''; position: absolute; bottom: 4px; width: 4px; height: 4px; background: var(--p-orange); border-radius: 50%; }
+        .has-water::before { content: ''; position: absolute; top: 4px; left: 4px; width: 4px; height: 4px; background: var(--p-cyan); border-radius: 50%; box-shadow: 0 0 5px var(--p-cyan); }
+        
+        .streak-fire { filter: drop-shadow(0 0 5px rgba(255, 69, 0, 0.6)); animation: flicker 1.5s infinite alternate; }
+        @keyframes flicker { from { opacity: 0.8; transform: scale(1); } to { opacity: 1; transform: scale(1.1); } }
+        
+        #pantry-render::-webkit-scrollbar { width: 4px; }
+        #pantry-render::-webkit-scrollbar-thumb { background: #444; border-radius: 10px; }
+        .water-wave { background: linear-gradient(180deg, #00E5FF 0%, #0077FF 100%); transition: height 0.6s cubic-bezier(0.4, 0, 0.2, 1); opacity: 0.8; }
+        
+        .macro-filter.active { background: var(--p-orange); color: white; border-color: var(--p-orange); }
+        .weight-bar { transition: height 0.5s ease; background: var(--p-orange); width: 8px; border-radius: 4px 4px 0 0; }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--p-bg); }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #555; }
+        
+        .custom-scroll::-webkit-scrollbar { width: 4px; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
+    </style>
+</head>
+<body>
+
+    <div id="login-view" class="w-full min-h-screen flex items-center justify-center p-4 relative overflow-hidden hidden">
+        <div class="glow-bg"></div>
+        <div class="glow-bg-2"></div>
+
+        <div class="login-card w-full max-w-md p-8 md:p-10 z-10 mx-auto">
+            <div class="flex flex-col items-center mb-10 text-center">
+                <div class="w-20 h-20 bg-gradient-to-tr from-[#FF4500] to-[#00E5FF] rounded-3xl flex items-center justify-center text-black shadow-[0_0_30px_rgba(0,229,255,0.2)] mb-6 transform rotate-3 hover:rotate-0 transition-all duration-500">
+                    <i data-lucide="zap" class="w-10 h-10 fill-black"></i>
+                </div>
+                <h1 class="text-3xl font-black italic tracking-tighter uppercase text-white">R&V <span class="text-[#00E5FF]">VITALITY</span></h1>
+                <p class="text-[10px] font-bold text-gray-500 uppercase tracking-widest mt-2">Authentication Portal</p>
+            </div>
+
+            <form id="login-form" class="space-y-5">
+                <div class="space-y-2">
+                    <label class="text-[10px] font-black uppercase text-gray-500 ml-2 tracking-widest">Email de Acesso</label>
+                    <div class="relative">
+                        <i data-lucide="mail" class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500"></i>
+                        <input type="email" id="email" placeholder="email@exemplo.com" required>
+                    </div>
+                </div>
+
+                <div class="space-y-2">
+                    <label class="text-[10px] font-black uppercase text-gray-500 ml-2 tracking-widest">Senha</label>
+                    <div class="relative">
+                        <i data-lucide="lock" class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500"></i>
+                        <input type="password" id="password" placeholder="••••••••" required>
+                    </div>
+                </div>
+
+                <div id="error-msg" class="hidden bg-red-500/10 border border-red-500/30 text-red-500 text-[10px] font-black uppercase p-3 rounded-xl text-center mt-4">
+                    Credenciais inválidas.
+                </div>
+
+                <button type="submit" id="submit-btn" class="btn-login w-full py-4 text-white rounded-2xl flex items-center justify-center gap-2 mt-6">
+                    <span>Acessar Painel</span>
+                    <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div id="app-view" class="p-4 lg:p-8 hidden">
+        <div class="max-w-6xl mx-auto space-y-6">
+            <header class="flex flex-col md:flex-row justify-between items-center gap-6 card-base p-6">
+                <div class="flex items-center gap-3">
+                    <div class="w-14 h-14 bg-gradient-to-tr from-[#FF4500] to-[#00E5FF] rounded-2xl flex items-center justify-center text-black shadow-[0_0_20px_rgba(0,229,255,0.2)]">
+                        <i data-lucide="zap" class="w-8 h-8 fill-black"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-black italic tracking-tighter uppercase text-white">R&V <span class="text-[#00E5FF]">VITALITY</span></h1>
+                        <div class="flex items-center gap-2">
+                            <span class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Couples Evolution v4.2</span>
+                            <div id="couple-mode" class="hidden flex items-center gap-1.5 bg-[#1A0033] border border-[#9D00FF] text-[#D400FF] px-3 py-1 rounded-full text-[9px] font-black animate-pulse shadow-[0_0_10px_rgba(157,0,255,0.3)]">
+                                <i data-lucide="heart" class="w-2.5 h-2.5"></i> POWER COUPLE 
+                                <span class="flex items-center gap-0.5 text-[#FF4500] ml-1 bg-[#0A0014] px-1.5 py-0.5 rounded-md border border-[#FF4500]/30">
+                                    <i data-lucide="flame" class="w-2.5 h-2.5 fill-[#FF4500]"></i> <span id="pc-streak">0</span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-4">
+                    <div class="flex bg-[#141414] p-1.5 rounded-2xl border border-[#222]">
+                        <button onclick="switchUser('victor')" id="tab-victor" class="flex-1 md:px-8 py-3 rounded-xl text-xs font-black uppercase btn-prime bg-[#222] shadow-sm text-[#FF4500]">Victor</button>
+                        <button onclick="switchUser('rafaela')" id="tab-rafaela" class="flex-1 md:px-8 py-3 rounded-xl text-xs font-black uppercase btn-prime text-gray-500 hover:text-gray-300">Rafaela</button>
+                    </div>
+                    <div class="flex items-center gap-2 bg-[#141414] px-5 py-3 rounded-2xl border border-[#333] shadow-sm">
+                        <i data-lucide="flame" class="w-6 h-6 text-[#FF4500] streak-fire"></i>
+                        <span id="streak-count" class="text-xl font-black text-[#FF4500]">0</span>
+                    </div>
+                    <button onclick="logout()" title="Sair do Painel" class="p-3 bg-red-500/10 border border-red-500/30 text-red-500 rounded-xl hover:bg-red-500/20 transition-colors">
+                        <i data-lucide="log-out" class="w-5 h-5"></i>
+                    </button>
+                </div>
+            </header>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                <div class="lg:col-span-4 space-y-6 order-2 lg:order-1">
+                    <section class="card-base card-water p-6 relative">
+                        <div class="flex justify-between items-center mb-6">
+                            <h3 class="text-sm font-black uppercase text-[#00E5FF] flex items-center gap-2 tracking-widest">
+                                <i data-lucide="droplets" class="w-4 h-4"></i> Hidratação
+                            </h3>
+                            <div class="flex gap-2">
+                                <button onclick="resetWater()" class="text-gray-600 hover:text-red-500 transition-colors bg-transparent border-none"><i data-lucide="rotate-ccw" class="w-4 h-4"></i></button>
+                                <span class="text-[10px] font-black text-[#00E5FF] bg-[#141414] border border-[#222] px-2 py-1 rounded-md" id="water-meta-label">--</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-around gap-4">
+                            <div class="relative w-24 h-36 bg-[#141414] rounded-3xl border border-[#333] overflow-hidden">
+                                <div id="water-fill" class="absolute bottom-0 w-full water-wave" style="height: 0%"></div>
+                                <div class="absolute inset-0 flex items-center justify-center font-black text-white text-sm drop-shadow-md z-10" id="water-pct">0%</div>
+                            </div>
+                            <div class="grid grid-cols-1 gap-3">
+                                <button onclick="addWater(250)" class="px-4 py-3 bg-[#141414] border border-[#222] hover:border-[#00E5FF] hover:text-[#00E5FF] rounded-xl text-gray-400 font-black text-[10px] flex items-center gap-2 transition-all">
+                                    <i data-lucide="glass-water" class="w-4 h-4"></i> +250ml
+                                </button>
+                                <button onclick="addWater(500)" class="px-4 py-3 bg-[#00E5FF] hover:bg-[#00B3CC] rounded-xl text-black font-black text-[10px] flex items-center gap-2 transition-all shadow-[0_0_15px_rgba(0,229,255,0.3)] border-none">
+                                    <i data-lucide="container" class="w-4 h-4 fill-black"></i> +500ml
+                                </button>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="card-base card-calc p-6 relative">
+                        <div class="flex justify-between items-center mb-6 text-gray-400">
+                            <h3 class="text-sm font-black uppercase flex items-center gap-2 tracking-widest"><i data-lucide="settings" class="w-4 h-4"></i> Setup Corpo</h3>
+                            <div class="flex gap-2">
+                                <button onclick="exportData()" title="Exportar Backup" class="text-gray-500 hover:text-white transition-colors bg-transparent border-none"><i data-lucide="download" class="w-4 h-4"></i></button>
+                                <label title="Importar Backup" class="cursor-pointer text-gray-500 hover:text-white transition-colors">
+                                    <i data-lucide="upload" class="w-4 h-4"></i>
+                                    <input type="file" id="import-file" class="hidden" accept=".json" onchange="importData(event)">
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-4">
+                            <div class="grid grid-cols-2 gap-3 text-[10px] font-black uppercase text-gray-500">
+                                <div class="flex flex-col gap-1">Peso <input type="number" id="calc-weight" value="85"></div>
+                                <div class="flex flex-col gap-1">Altura <input type="number" id="calc-height" value="180"></div>
+                            </div>
+                            <div class="grid grid-cols-2 gap-3 text-[10px] font-black uppercase text-gray-500">
+                                <div class="flex flex-col gap-1">Pescoço <input type="number" id="calc-neck" value="40"></div>
+                                <div class="flex flex-col gap-1">Cintura <input type="number" id="calc-waist" value="90"></div>
+                            </div>
+                            <div id="hip-container" class="hidden flex flex-col gap-1 text-[10px] font-black uppercase text-gray-500">
+                                Quadril <input type="number" id="calc-hip" value="100">
+                            </div>
+                            <div class="space-y-3">
+                                <select id="calc-activity" class="text-[10px] uppercase font-black text-gray-300">
+                                    <option value="1.2">Sedentário</option>
+                                    <option value="1.55">Ativo (3-5x/sem)</option>
+                                    <option value="1.9">Atleta Elite</option>
+                                </select>
+                                <select id="calc-goal" class="text-[10px] uppercase font-black" style="color: var(--p-orange); border-color: #333;">
+                                    <option value="-500">Cutting (-500 kcal)</option>
+                                    <option value="0">Manutenção</option>
+                                    <option value="300">Bulking (+300 kcal)</option>
+                                </select>
+                            </div>
+                            <button onclick="calculateBodyMetas()" class="w-full py-4 bg-[#1A1A1A] text-white border border-[#333] hover:border-gray-500 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all">Sincronizar Setup</button>
+
+                            <div class="mt-4 pt-4 border-t border-[#222]">
+                                <p class="text-[9px] font-black text-gray-600 uppercase tracking-widest mb-2">Histórico de Peso (Últimos 7)</p>
+                                <div class="flex items-end h-16 gap-1" id="weight-chart"></div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+                <div class="lg:col-span-8 space-y-6 order-1 lg:order-2">
+                    <section class="card-base card-stats p-8 relative overflow-hidden">
+                        <div class="absolute top-4 right-8 text-[10px] font-black text-gray-600 uppercase tracking-widest" id="date-label">CARREGANDO...</div>
+                        
+                        <button onclick="generateSuggestion()" class="absolute top-4 left-8 flex items-center gap-1.5 px-3 py-1.5 bg-[#141414] border border-[#222] rounded-full text-[9px] font-black text-[#00E5FF] hover:border-[#00E5FF] transition-all uppercase tracking-tighter shadow-sm z-20 cursor-pointer">
+                            <i data-lucide="wand-2" class="w-3 h-3"></i> IA Cardápio Inteligente
+                        </button>
+
+                        <div class="flex flex-col md:flex-row justify-between items-center gap-10 relative z-10 mt-6 md:mt-0">
+                            <div class="text-center md:text-left">
+                                <span class="text-8xl font-black tracking-tighter text-white" id="main-kcal">0</span>
+                                <div class="flex items-center gap-2 mt-2 justify-center md:justify-start">
+                                    <p class="text-xs font-black text-[#FF4500] uppercase tracking-widest" id="kcal-label">Kcal Restantes</p>
+                                    <span class="px-2 py-0.5 bg-[#141414] border border-[#333] rounded-md text-[10px] text-gray-400 font-black">META: <span id="meta-display">0</span></span>
+                                </div>
+                                <div id="bf-badge" class="mt-4 inline-block px-3 py-1.5 bg-[#1A1A1A] border border-[#333] rounded-lg text-[10px] font-black text-gray-300 uppercase tracking-tighter">BF ESTIMADO: --%</div>
+                            </div>
+
+                            <div class="flex-1 w-full max-sm space-y-5">
+                                <div class="space-y-1.5">
+                                    <div class="flex justify-between text-[11px] font-black uppercase tracking-widest"><span class="text-gray-400">Proteína</span><span id="label-p" class="text-[#FF4500]">0/0g</span></div>
+                                    <div class="progress-container"><div id="bar-p" class="progress-fill bg-[#FF4500]" style="width: 0%; box-shadow: 0 0 10px rgba(255,69,0,0.5);"></div></div>
+                                </div>
+                                <div class="space-y-1.5">
+                                    <div class="flex justify-between text-[11px] font-black uppercase tracking-widest"><span class="text-gray-400">Carboidrato</span><span id="label-c" class="text-[#9D00FF]">0/0g</span></div>
+                                    <div class="progress-container"><div id="bar-c" class="progress-fill bg-[#9D00FF]" style="width: 0%; box-shadow: 0 0 10px rgba(157,0,255,0.5);"></div></div>
+                                </div>
+                                <div class="space-y-1.5">
+                                    <div class="flex justify-between text-[11px] font-black uppercase tracking-widest"><span class="text-gray-400">Gordura</span><span id="label-g" class="text-[#FFB800]">0/0g</span></div>
+                                    <div class="progress-container"><div id="bar-g" class="progress-fill bg-[#FFB800]" style="width: 0%; box-shadow: 0 0 10px rgba(255,184,0,0.5);"></div></div>
+                                </div>
+                                <div class="space-y-1.5">
+                                    <div class="flex justify-between text-[11px] font-black uppercase tracking-widest"><span class="text-gray-400">Fibras</span><span id="label-f" class="text-[#00E5FF]">0/0g</span></div>
+                                    <div class="progress-container"><div id="bar-f" class="progress-fill bg-[#00E5FF]" style="width: 0%; box-shadow: 0 0 10px rgba(0,229,255,0.5);"></div></div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <section class="card-base card-pantry p-6 flex flex-col h-[420px]">
+                            <div class="flex justify-between items-center mb-4 gap-2">
+                                <div class="flex-1 flex items-center gap-3 bg-[#141414] p-3 rounded-2xl border border-[#333] shadow-sm focus-within:border-[#FF4500] transition-colors">
+                                    <i data-lucide="search" class="w-5 h-5 text-gray-500"></i>
+                                    <input type="text" id="pantry-search" oninput="renderPantry()" placeholder="LOCALIZAR ALIMENTO..." class="bg-transparent border-none p-0 text-xs font-black uppercase tracking-widest placeholder:text-gray-600 w-full focus:shadow-none focus:ring-0 text-white">
+                                </div>
+                                <button onclick="openAddFoodModal()" class="w-12 h-12 bg-[#FF4500] rounded-2xl shadow-[0_0_15px_rgba(255,69,0,0.3)] flex items-center justify-center transition-colors border-none">
+                                    <i data-lucide="plus" class="w-6 h-6"></i>
+                                </button>
+                            </div>
+                            <div class="flex gap-2 mb-4">
+                                <button onclick="setMacroFilter('all')" class="macro-filter active flex-1 py-1 text-[9px] font-black uppercase rounded-lg border border-[#333] text-gray-400 hover:text-white transition-colors">ALL</button>
+                                <button onclick="setMacroFilter('P')" class="macro-filter flex-1 py-1 text-[9px] font-black uppercase rounded-lg border border-[#333] text-gray-400 hover:text-white transition-colors">PROT</button>
+                                <button onclick="setMacroFilter('C')" class="macro-filter flex-1 py-1 text-[9px] font-black uppercase rounded-lg border border-[#333] text-gray-400 hover:text-white transition-colors">CARB</button>
+                                <button onclick="setMacroFilter('G')" class="macro-filter flex-1 py-1 text-[9px] font-black uppercase rounded-lg border border-[#333] text-gray-400 hover:text-white transition-colors">GORD</button>
+                                <button onclick="setMacroFilter('F')" class="macro-filter flex-1 py-1 text-[9px] font-black uppercase rounded-lg border border-[#333] text-gray-400 hover:text-white transition-colors">FIBR</button>
+                            </div>
+                            <div class="flex-1 overflow-y-auto pr-2 space-y-2 custom-scroll" id="pantry-render"></div>
+                        </section>
+
+                        <section class="card-base card-calendar p-6 h-[420px]">
+                            <div class="flex justify-between items-center mb-6">
+                                <h3 class="text-sm font-black uppercase text-[#9D00FF] flex items-center gap-2 tracking-widest">
+                                    <i data-lucide="calendar-days" class="w-4 h-4"></i> Timeline
+                                </h3>
+                                <div class="flex items-center gap-1">
+                                    <button onclick="changeMonth(-1)" class="p-1 text-gray-600 hover:text-white transition-colors bg-transparent border-none"><i data-lucide="chevron-left" class="w-5 h-5"></i></button>
+                                    <span id="current-month-display" class="text-[10px] font-black text-gray-300 uppercase bg-[#141414] border border-[#222] px-2 py-1 rounded">--</span>
+                                    <button onclick="changeMonth(1)" class="p-1 text-gray-600 hover:text-white transition-colors bg-transparent border-none"><i data-lucide="chevron-right" class="w-5 h-5"></i></button>
+                                </div>
+                            </div>
+                            <div id="calendar-grid" class="grid grid-cols-7 gap-2"></div>
+                            <div class="mt-4 flex gap-4 justify-center text-[8px] font-black uppercase text-gray-500 tracking-widest border-t border-[#222] pt-4">
+                                <span class="flex items-center gap-1"><div class="w-2 h-2 rounded-full bg-[#FF4500]"></div> Dieta OK</span>
+                                <span class="flex items-center gap-1"><div class="w-2 h-2 rounded-full bg-[#00E5FF]"></div> Água OK</span>
+                            </div>
+                        </section>
+                    </div>
+
+                    <section class="card-base card-meals p-8">
+                        <div class="flex justify-end mb-4">
+                            <button onclick="copyYesterday()" class="px-4 py-2 bg-[#1A1A1A] border border-[#333] text-gray-400 hover:text-white rounded-xl text-[10px] font-black uppercase flex items-center gap-2 transition-colors">
+                                <i data-lucide="copy" class="w-4 h-4"></i> Duplicar Ontem
+                            </button>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+                            <div class="relative">
+                                <p class="text-[11px] font-black text-gray-500 uppercase mb-6 flex items-center gap-2 tracking-widest border-b border-[#222] pb-2 italic">
+                                    <i data-lucide="coffee" class="w-4 h-4 text-gray-400"></i> Café da Manhã
+                                </p>
+                                <div id="list-morning" class="space-y-3"></div>
+                            </div>
+                            <div class="relative">
+                                <p class="text-[11px] font-black text-gray-500 uppercase mb-6 flex items-center gap-2 tracking-widest border-b border-[#222] pb-2 italic">
+                                    <i data-lucide="sun" class="w-4 h-4 text-gray-400"></i> Almoço
+                                </p>
+                                <div id="list-lunch" class="space-y-3"></div>
+                            </div>
+                            <div class="relative">
+                                <p class="text-[11px] font-black text-gray-500 uppercase mb-6 flex items-center gap-2 tracking-widest border-b border-[#222] pb-2 italic">
+                                    <i data-lucide="moon" class="w-4 h-4 text-gray-400"></i> Jantar
+                                </p>
+                                <div id="list-dinner" class="space-y-3"></div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal" class="fixed inset-0 bg-[#000000]/80 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-[#0A0A0A] border border-[#222] w-full max-w-md p-8 rounded-[3rem] shadow-[0_20px_50px_rgba(0,0,0,0.8)] relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[#FF4500] to-[#00E5FF]"></div>
+            <h2 id="m-name" class="text-3xl font-black uppercase tracking-tighter text-white mt-4 italic">Alimento</h2>
+            <div class="grid grid-cols-3 gap-2 mb-8 mt-6">
+                <button onclick="setTurno('morning', this)" class="turno-btn active p-4 border rounded-2xl text-[10px] font-black uppercase bg-[#1A1A1A] text-white border-[#FF4500]">Café</button>
+                <button onclick="setTurno('lunch', this)" class="turno-btn p-4 border border-[#333] rounded-2xl text-[10px] font-black uppercase bg-[#0D0D0D] text-gray-500">Almoço</button>
+                <button onclick="setTurno('dinner', this)" class="turno-btn p-4 border border-[#333] rounded-2xl text-[10px] font-black uppercase bg-[#0D0D0D] text-gray-500">Jantar</button>
+            </div>
+            <input type="number" id="m-grams" oninput="updateMCalc()" class="w-full bg-[#141414] border border-[#222] p-8 rounded-[2rem] text-5xl font-black text-center text-white focus:border-[#00E5FF] mb-8" placeholder="0">
+            <div class="grid grid-cols-5 gap-2 text-center mb-10">
+                <div class="bg-[#141414] border border-[#222] p-3 rounded-2xl"><p class="text-[9px] text-gray-500 uppercase font-black mb-1">Kcal</p><p id="m-kcal" class="font-black text-base text-white">0</p></div>
+                <div class="bg-[#141414] border border-[#222] p-3 rounded-2xl"><p class="text-[9px] text-[#FF4500] uppercase font-black mb-1">P</p><p id="m-p" class="font-black text-base text-[#FF4500]">0</p></div>
+                <div class="bg-[#141414] border border-[#222] p-3 rounded-2xl"><p class="text-[9px] text-[#9D00FF] uppercase font-black mb-1">C</p><p id="m-c" class="font-black text-base text-[#9D00FF]">0</p></div>
+                <div class="bg-[#141414] border border-[#222] p-3 rounded-2xl"><p class="text-[9px] text-[#FFB800] uppercase font-black mb-1">G</p><p id="m-g" class="font-black text-base text-[#FFB800]">0</p></div>
+                <div class="bg-[#141414] border border-[#222] p-3 rounded-2xl"><p class="text-[9px] text-[#00E5FF] uppercase font-black mb-1">F</p><p id="m-f" class="font-black text-base text-[#00E5FF]">0</p></div>
+            </div>
+            <div class="flex gap-4">
+                <button onclick="closeModal('modal')" class="flex-1 font-black text-gray-500 uppercase text-[11px] bg-transparent border-none">Abortar</button>
+                <button onclick="confirmLog()" class="flex-[2.5] py-5 bg-[#FF4500] text-white rounded-2xl font-black uppercase text-[11px] border-none shadow-[0_0_20px_rgba(255,69,0,0.4)]">Confirmar Log</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-food" class="fixed inset-0 bg-[#000000]/80 hidden z-50 flex items-center justify-center p-4">
+        <div class="bg-[#0A0A0A] border border-[#222] w-full max-sm p-8 rounded-[3rem] relative overflow-hidden">
+            <h2 class="text-2xl font-black uppercase text-white mb-6 italic">Novo Alimento</h2>
+            <div class="space-y-4 mb-8">
+                <input type="text" id="new-food-name" placeholder="Identificação">
+                <div class="grid grid-cols-2 gap-3">
+                    <input type="number" id="new-food-p" placeholder="Prot (g)">
+                    <input type="number" id="new-food-c" placeholder="Carbo (g)">
+                    <input type="number" id="new-food-g" placeholder="Gord (g)">
+                    <input type="number" id="new-food-f" placeholder="Fibra (g)">
+                </div>
+            </div>
+            <div class="flex gap-4">
+                <button onclick="closeModal('modal-food')" class="flex-1 font-black text-gray-500 uppercase text-[11px] bg-transparent border-none">Cancelar</button>
+                <button onclick="saveNewFood()" class="flex-[2.5] py-5 bg-white text-black rounded-2xl font-black uppercase text-[11px] border-none">Salvar no BD</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-suggestion" class="fixed inset-0 bg-[#000000]/95 backdrop-blur-xl hidden z-[60] flex items-center justify-center p-4">
+        <div class="bg-[#0A0A0A] border border-[#222] w-full max-w-2xl p-8 rounded-[3.5rem] relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-[#00E5FF] via-[#FF4500] to-[#9D00FF]"></div>
+            <div class="flex justify-between items-start mb-8">
+                <div>
+                    <h2 class="text-4xl font-black uppercase tracking-tighter text-white italic">Script Nutricional</h2>
+                    <p class="text-[10px] text-[#00E5FF] font-black uppercase tracking-widest">Vitality Intelligence Engine</p>
+                </div>
+                <button onclick="closeModal('modal-suggestion')" class="p-3 bg-[#111] rounded-2xl text-gray-500 hover:text-white border border-[#222] cursor-pointer">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </button>
+            </div>
+            <div id="sugg-content" class="space-y-6 max-h-[60vh] overflow-y-auto pr-4 custom-scroll"></div>
+            <div class="mt-10 border-t border-[#222] pt-8 text-right">
+                 <span id="sugg-precision" class="text-[10px] font-black uppercase text-gray-500 italic mr-4">STATUS: OFFLINE</span>
+                <button onclick="closeModal('modal-suggestion')" class="w-full py-6 bg-white text-black rounded-3xl font-black uppercase text-sm tracking-widest hover:bg-gray-200 active:scale-95 transition-all border-none cursor-pointer">Fechar Relatório</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        // === FIREBASE ===
+        const firebaseConfig = {
+            apiKey: "AIzaSyBMGpMk-dkx4IAiKLZHQUzWlsmWfSd9w24",
+            authDomain: "rv-saude.firebaseapp.com",
+            projectId: "rv-saude",
+            storageBucket: "rv-saude.firebasestorage.app",
+            messagingSenderId: "489534251004",
+            appId: "1:489534251004:web:23ae166bdd236b88b95c79",
+            measurementId: "G-CP5Q159EWE"
+        };
+        
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const auth = firebase.auth();
+
+        const defaultState = {
+            user: 'victor',
+            selectedTurno: 'morning',
+            selectedDate: new Date().toISOString().split('T')[0],
+            currentMonth: new Date().getMonth(),
+            currentYear: new Date().getFullYear(),
+            activeFood: null,
+            pantryFilter: 'all',
+            data: {
+                victor: { meta: 2500, p: 180, c: 250, g: 70, fMeta: 30, waterMeta: 3000, waterLogs: {}, logs: {}, streak: 0, bf: 0, weightHistory: [] },
+                rafaela: { meta: 1800, p: 130, c: 180, g: 50, fMeta: 25, waterMeta: 2200, waterLogs: {}, logs: {}, streak: 0, bf: 0, weightHistory: [] }
+            },
+            pantry: []
+        };
+
+        let state = JSON.parse(JSON.stringify(defaultState));
+
+        // --- SISTEMA DE LOGIN ADICIONADO AQUI ---
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault(); // Evita o recarregamento da página
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const errorMsg = document.getElementById('error-msg');
+            
+            try {
+                errorMsg.classList.add('hidden');
+                await auth.signInWithEmailAndPassword(email, password);
+            } catch (error) {
+                errorMsg.classList.remove('hidden');
+                console.error("Erro no login:", error);
+            }
+        });
+
+        auth.onAuthStateChanged(user => {
+            if (user) { 
+                document.getElementById('login-view').classList.add('hidden'); 
+                document.getElementById('app-view').classList.remove('hidden'); 
+                init(); 
+            } else { 
+                document.getElementById('login-view').classList.remove('hidden'); 
+                document.getElementById('app-view').classList.add('hidden'); 
+            }
+        });
+
+        async function init() {
+            await loadState();
+            updateUI(); renderPantry(); renderCalendar(); updateMonthDisplay();
+        }
+
+        async function loadState() {
+            try { 
+                const doc = await db.collection('rv_vitality').doc('couples_data').get(); 
+                if (doc.exists) state = doc.data(); 
+            } catch(e) {}
+        }
+
+        function saveState() {
+            db.collection('rv_vitality').doc('couples_data').set(state).catch(e => {});
+        }
+
+        function updateUI() {
+            const user = state.data[state.user]; 
+            const logs = user.logs[state.selectedDate] || []; 
+            const water = user.waterLogs[state.selectedDate] || 0;
+            let curP=0, curC=0, curG=0, curK=0, curF=0;
+            logs.forEach(l => { curP+=l.p; curC+=l.c; curG+=l.g; curK+=l.kcal; curF+=(l.f || 0); });
+
+            document.getElementById('main-kcal').innerText = Math.round(user.meta - curK);
+            document.getElementById('label-p').innerText = `${curP.toFixed(0)}/${user.p}g`;
+            document.getElementById('label-c').innerText = `${curC.toFixed(0)}/${user.c}g`;
+            document.getElementById('label-g').innerText = `${curG.toFixed(0)}/${user.g}g`;
+            document.getElementById('label-f').innerText = `${curF.toFixed(0)}/${user.fMeta}g`;
+            
+            document.getElementById('bar-p').style.width = Math.min(100, (curP/user.p*100)) + '%';
+            document.getElementById('bar-c').style.width = Math.min(100, (curC/user.c*100)) + '%';
+            document.getElementById('bar-g').style.width = Math.min(100, (curG/user.g*100)) + '%';
+            document.getElementById('bar-f').style.width = Math.min(100, (curF/user.fMeta*100)) + '%';
+
+            const waterPct = Math.min(100, (water / user.waterMeta) * 100);
+            document.getElementById('water-fill').style.height = waterPct + '%';
+            document.getElementById('water-pct').innerText = Math.floor(waterPct) + '%';
+            document.getElementById('water-meta-label').innerText = `${(user.waterMeta/1000).toFixed(1)}L`;
+            document.getElementById('date-label').innerText = state.selectedDate;
+
+            ['morning', 'lunch', 'dinner'].forEach(t => {
+                document.getElementById(`list-${t}`).innerHTML = logs.filter(l => l.turno === t).map(l => `
+                    <div class="bg-[#141414] p-3 rounded-2xl border border-[#222] flex justify-between items-center group">
+                        <div class="flex flex-col"><span class="text-[10px] font-black text-white italic uppercase">${l.name}</span><span class="text-[8px] text-gray-500">${Math.round(l.kcal)} KCAL</span></div>
+                        <button onclick="deleteLog('${l.logId}')" class="opacity-0 group-hover:opacity-100 text-gray-600 hover:text-red-500 border-none bg-transparent"><i data-lucide="trash-2" class="w-3 h-3"></i></button>
+                    </div>`).join('');
+            });
+            document.getElementById('streak-count').innerText = calculateStreak(state.user);
+            lucide.createIcons();
+        }
+
+        // === SMART MENU ENGINE (API KEY INTEGRATED) ===
+        async function generateSuggestion() {
+            const user = state.data[state.user]; 
+            const logs = user.logs[state.selectedDate] || [];
+            let curP=0, curC=0, curG=0; logs.forEach(l => { curP+=l.p; curC+=l.c; curG+=l.g; });
+            const gapP = Math.max(0, user.p - curP); const gapC = Math.max(0, user.c - curC); const gapG = Math.max(0, user.g - curG);
+            
+            if (gapP < 5 && gapC < 5) return alert("Meta atingida!");
+
+            const content = document.getElementById('sugg-content');
+            content.innerHTML = `<div class="flex flex-col items-center justify-center py-12 text-center"><div class="w-12 h-12 border-4 border-[#00E5FF] border-t-transparent rounded-full animate-spin mb-4"></div><p class="text-xs font-black uppercase text-gray-500 tracking-widest italic">Acessando Vitality Neural...</p></div>`;
+            document.getElementById('modal-suggestion').classList.remove('hidden');
+
+            const remainingTurns = ['morning', 'lunch', 'dinner'].filter(t => !logs.some(l => l.turno === t));
+            const prompt = `Nutricionista esportivo. Objetivo: Monte cardápio para os turnos [${remainingTurns.join(', ')}]. Macros alvo: P:${gapP.toFixed(1)}g, C:${gapC.toFixed(1)}g, G:${gapG.toFixed(1)}g. LISTA: ${JSON.stringify(state.pantry.map(f => ({n: f.name, p: f.p, c: f.c, g: f.g})))}. Responda APENAS um array JSON: [{"turno": "nome", "alimentos": [{"nome": "item", "peso": gramas}]}]`;
+
+            // === COLE A SUA CHAVE DENTRO DAS ASPAS ===
+            const API_KEY = "AIzaSyD9LwBk5PoQpXnRyhmmBiV2OiTlcNle7AY".trim(); 
+            
+            const URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
+
+            try {
+                const response = await fetch(URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: prompt }] }],
+                        generationConfig: { responseMimeType: "application/json", temperature: 0.2 }
+                    })
+                });
+
+                if (!response.ok) {
+                    const errorDetails = await response.json();
+                    throw new Error(errorDetails.error.message || "Falha na Requisição");
+                }
+
+                const data = await response.json();
+                const suggestion = JSON.parse(data.candidates[0].content.parts[0].text);
+
+                content.innerHTML = suggestion.map(s => `
+                    <div class="bg-[#141414] border border-[#222] p-8 rounded-[2.5rem] relative overflow-hidden mb-4 shadow-xl">
+                        <div class="absolute top-0 left-0 w-1.5 h-full bg-[#00E5FF]"></div>
+                        <h3 class="text-[10px] font-black uppercase text-[#00E5FF] mb-6 tracking-widest italic">${s.turno.toUpperCase()} SUGERIDO</h3>
+                        <div class="space-y-4">
+                            ${s.alimentos.map(a => `
+                                <div class="flex justify-between items-center border-b border-[#222] pb-2">
+                                    <span class="text-sm font-black text-white uppercase italic">${a.nome}</span>
+                                    <span class="text-lg font-black text-white">${Math.round(a.peso)}g</span>
+                                </div>`).join('')}
+                        </div>
+                    </div>`).join('');
+                document.getElementById('sugg-precision').innerText = "STATUS: ONLINE";
+                lucide.createIcons();
+
+            } catch (error) {
+                console.error("ERRO:", error);
+                content.innerHTML = `<div class="bg-red-500/10 border border-red-500/30 p-8 rounded-[2.5rem] text-center"><p class="text-red-500 text-xs font-black uppercase mb-2">Interface Offline</p><p class="text-[9px] text-gray-400 font-bold uppercase italic">${error.message}</p></div>`;
+            }
+        }
+
+        // --- Funções auxiliares mantidas ---
+        function switchUser(u) { state.user = u; document.documentElement.style.setProperty('--p-orange', u === 'victor' ? '#FF4500' : '#9D00FF'); updateUI(); renderCalendar(); }
+        function addWater(ml) { const user = state.data[state.user]; user.waterLogs[state.selectedDate] = (user.waterLogs[state.selectedDate] || 0) + ml; saveState(); updateUI(); }
+        function resetWater() { state.data[state.user].waterLogs[state.selectedDate] = 0; saveState(); updateUI(); }
+        function renderPantry() {
+            const term = document.getElementById('pantry-search').value.toLowerCase();
+            let filtered = state.pantry.filter(f => f.name.toLowerCase().includes(term));
+            document.getElementById('pantry-render').innerHTML = filtered.map(f => `
+                <div onclick="openFood(${f.id})" class="p-4 bg-[#141414] border border-[#222] rounded-2xl cursor-pointer hover:border-[#FF4500] transition-colors">
+                    <span class="text-[10px] font-black uppercase text-white">${f.name}</span>
+                </div>`).join('');
+        }
+        function openFood(id) { state.activeFood = state.pantry.find(x => x.id === id); document.getElementById('m-name').innerText = state.activeFood.name; document.getElementById('modal').classList.remove('hidden'); }
+        function openAddFoodModal() { document.getElementById('modal-food').classList.remove('hidden'); }
+        function saveNewFood() {
+            const name = document.getElementById('new-food-name').value;
+            const p = parseFloat(document.getElementById('new-food-p').value) || 0;
+            const c = parseFloat(document.getElementById('new-food-c').value) || 0;
+            const g = parseFloat(document.getElementById('new-food-g').value) || 0;
+            const f = parseFloat(document.getElementById('new-food-f').value) || 0;
+            if(!name) return; state.pantry.push({ id: Date.now(), name, p, c, g, f }); saveState(); renderPantry(); closeModal('modal-food');
+        }
+        function confirmLog() {
+            const g = parseFloat(document.getElementById('m-grams').value); if(!g) return;
+            const factor = g/100; if(!state.data[state.user].logs[state.selectedDate]) state.data[state.user].logs[state.selectedDate] = [];
+            state.data[state.user].logs[state.selectedDate].push({ logId: Date.now().toString(), name: state.activeFood.name, turno: state.selectedTurno, weight: g, p: state.activeFood.p * factor, c: state.activeFood.c * factor, g: state.activeFood.g * factor, f: (state.activeFood.f || 0) * factor, kcal: (state.activeFood.p*4 + state.activeFood.c*4 + state.activeFood.g*9)*factor });
+            saveState(); updateUI(); closeModal('modal');
+        }
+        function deleteLog(id) { state.data[state.user].logs[state.selectedDate] = state.data[state.user].logs[state.selectedDate].filter(l => l.logId !== id); saveState(); updateUI(); }
+        function calculateStreak(u) { return state.data[u].streak || 0; }
+        function setTurno(t, btn) { state.selectedTurno = t; document.querySelectorAll('.turno-btn').forEach(b => b.classList.replace('bg-[#1A1A1A]', 'bg-[#0D0D0D]')); btn.classList.replace('bg-[#0D0D0D]', 'bg-[#1A1A1A]'); }
+        function updateMCalc() {
+            const factor = (document.getElementById('m-grams').value || 0) / 100;
+            document.getElementById('m-p').innerText = (state.activeFood.p * factor).toFixed(1);
+            document.getElementById('m-c').innerText = (state.activeFood.c * factor).toFixed(1);
+            document.getElementById('m-g').innerText = (state.activeFood.g * factor).toFixed(1);
+            document.getElementById('m-f').innerText = ((state.activeFood.f || 0) * factor).toFixed(1);
+            document.getElementById('m-kcal').innerText = ((state.activeFood.p*4 + state.activeFood.c*4 + state.activeFood.g*9)*factor).toFixed(0);
+        }
+        function renderCalendar() {
+            const grid = document.getElementById('calendar-grid'); grid.innerHTML = '';
+            const days = new Date(state.currentYear, state.currentMonth + 1, 0).getDate();
+            for(let d=1; d<=days; d++){
+                const ds = `${state.currentYear}-${String(state.currentMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+                grid.innerHTML += `<div onclick="state.selectedDate='${ds}'; updateUI(); renderCalendar();" class="cal-day ${state.selectedDate===ds ? 'selected' : ''}">${d}</div>`;
+            }
+        }
+        function changeMonth(o) { state.currentMonth += o; if(state.currentMonth>11){state.currentMonth=0;state.currentYear++} if(state.currentMonth<0){state.currentMonth=11;state.currentYear--} updateMonthDisplay(); renderCalendar(); }
+        function updateMonthDisplay() { const d = new Date(state.currentYear, state.currentMonth); document.getElementById('current-month-display').innerText = d.toLocaleString('pt-br', {month:'short', year:'numeric'}); }
+        function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
+        function logout() { auth.signOut(); }
+
+    </script>
+</body>
+</html>
