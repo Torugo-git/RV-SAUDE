@@ -552,7 +552,7 @@
             const prompt = `Nutricionista esportivo. Objetivo: Monte cardápio para os turnos [${remainingTurns.join(', ')}]. Macros alvo: P:${gapP.toFixed(1)}g, C:${gapC.toFixed(1)}g, G:${gapG.toFixed(1)}g. LISTA: ${JSON.stringify(state.pantry.map(f => ({n: f.name, p: f.p, c: f.c, g: f.g})))}. Responda APENAS um array JSON: [{"turno": "nome", "alimentos": [{"nome": "item", "peso": gramas}]}]`;
 
             // === COLE A SUA CHAVE DENTRO DAS ASPAS ===
-            const API_KEY = "MINHA_API_KEY_AQUI";
+            const API_KEY = "AIzaSyD9LwBk5PoQpXnRyhmmBiV2OiTlcNle7AY";
 
             const URL = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
 
