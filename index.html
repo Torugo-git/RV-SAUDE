@@ -535,7 +535,7 @@
             lucide.createIcons();
         }
 
-        // === REFACTURED SMART MENU ENGINE (GROQ API) ===
+        // === IA ENGINE OTIMIZADO E COM CAPTURA DE ERRO 100% TRANSPARENTE ===
         async function generateSuggestion() {
             const user = state.data[state.user]; 
             const logs = user.logs[state.selectedDate] || [];
@@ -545,31 +545,35 @@
             if (gapP < 5 && gapC < 5) return alert("Meta atingida!");
 
             const content = document.getElementById('sugg-content');
-            content.innerHTML = `<div class="flex flex-col items-center justify-center py-12 text-center"><div class="w-12 h-12 border-4 border-[#00E5FF] border-t-transparent rounded-full animate-spin mb-4"></div><p class="text-xs font-black uppercase text-gray-500 tracking-widest italic">Processando via Groq Llama 3...</p></div>`;
+            content.innerHTML = `<div class="flex flex-col items-center justify-center py-12 text-center"><div class="w-12 h-12 border-4 border-[#00E5FF] border-t-transparent rounded-full animate-spin mb-4"></div><p class="text-xs font-black uppercase text-gray-500 tracking-widest italic">Processando via Groq Llama 3.1...</p></div>`;
             document.getElementById('modal-suggestion').classList.remove('hidden');
 
             const remainingTurns = ['morning', 'lunch', 'dinner'].filter(t => !logs.some(l => l.turno === t));
             
-            // Diretivas claras e isoladas para o modelo
-            const systemPrompt = "Você é uma IA nutricional de elite. Você DEVE retornar EXCLUSIVAMENTE um objeto JSON válido. Não adicione nenhum texto antes ou depois do JSON, e não use blocos de código markdown (como ```json).";
+            // Tratamento caso a despensa esteja vazia (isso pode quebrar a lógica do Llama)
+            const pantryData = state.pantry.length > 0 
+                ? JSON.stringify(state.pantry.map(f => ({n: f.name, p: f.p, c: f.c, g: f.g}))) 
+                : "[]";
+
+            const systemPrompt = "Você é uma IA nutricional de elite. Você DEVE retornar EXCLUSIVAMENTE um objeto JSON válido, sem texto algum antes ou depois. Não utilize formatação markdown de código.";
             
-            const userPrompt = `Objetivo: Sugerir alimentos da despensa para os turnos: ${remainingTurns.join(', ')}.
-            Macros restantes para bater: Proteína: ${gapP.toFixed(1)}g, Carboidrato: ${gapC.toFixed(1)}g, Gordura: ${gapG.toFixed(1)}g.
-            Use apenas alimentos desta lista: ${JSON.stringify(state.pantry.map(f => ({n: f.name, p: f.p, c: f.c, g: f.g}))) || "[]"}.
-            Retorne OBRIGATORIAMENTE no formato JSON com esta estrutura exata: {"cardapio": [{"turno": "nome_do_turno", "alimentos": [{"nome": "nome_do_item", "peso": gramas}]}]}`;
+            const userPrompt = `Crie uma sugestão para: ${remainingTurns.join(', ')}.
+Macros restantes: Proteína: ${gapP.toFixed(1)}g, Carbo: ${gapC.toFixed(1)}g, Gordura: ${gapG.toFixed(1)}g.
+Use APENAS estes alimentos: ${pantryData}.
+Retorne OBRIGATORIAMENTE no formato JSON com esta estrutura exata: {"cardapio": [{"turno": "nome_do_turno", "alimentos": [{"nome": "item", "peso": gramas}]}]}`;
 
             // INSIRA SUA CHAVE DO GROQ ABAIXO
             const GROQ_API_KEY = "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"; 
 
             try {
-                const response = await fetch("[https://api.groq.com/openai/v1/chat/completions](https://api.groq.com/openai/v1/chat/completions)", {
+                const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
                     method: 'POST',
                     headers: { 
                         'Content-Type': 'application/json',
                         'Authorization': `Bearer ${GROQ_API_KEY}`
                     },
                     body: JSON.stringify({
-                        model: "llama3-8b-8192",
+                        model: "llama-3.1-8b-instant", // Modelo mais moderno e estável na infra do Groq
                         messages: [
                             { role: "system", content: systemPrompt },
                             { role: "user", content: userPrompt }
@@ -579,23 +583,23 @@
                     })
                 });
 
-                // Capturando de fato o erro interno que o Groq retorna caso ainda ocorra um 400
                 if (!response.ok) {
-                    const errorDetails = await response.json();
-                    throw new Error(errorDetails.error?.message || "Erro desconhecido na requisição API");
+                    // Aqui agora capturamos o MOTIVO REAL do erro 400
+                    const errData = await response.json();
+                    throw new Error(`[Status ${response.status}] Motivo: ${errData.error?.message || "Erro interno da API"}`);
                 }
 
                 const result = await response.json();
-                const jsonText = result.choices[0].message.content.trim();
+                let jsonText = result.choices[0].message.content.trim();
                 
-                // Limpeza por precaução caso o modelo envie o bloco markdown ignorando as regras
-                const cleanJsonText = jsonText.replace(/^```json/i, '').replace(/```$/i, '').trim();
-                const jsonResponse = JSON.parse(cleanJsonText);
+                // Limpeza agressiva do block code markdown caso o Llama decida ignorar a regra do system prompt
+                jsonText = jsonText.replace(/^```json/i, '').replace(/```$/i, '').trim();
                 
+                const jsonResponse = JSON.parse(jsonText);
                 const cardapio = jsonResponse.cardapio || [];
 
                 if (cardapio.length === 0) {
-                     content.innerHTML = `<div class="text-center text-gray-500 py-8 font-black uppercase text-xs tracking-widest">Nenhuma sugestão viável encontrada.</div>`;
+                     content.innerHTML = `<div class="text-center text-gray-500 py-8 font-black uppercase text-xs tracking-widest">A despensa parece não ter opções viáveis.</div>`;
                      document.getElementById('sugg-precision').innerText = "STATUS: ONLINE (SEM DADOS)";
                      return;
                 }
@@ -613,12 +617,12 @@
                         </div>
                     </div>`).join('');
                 
-                document.getElementById('sugg-precision').innerText = "STATUS: ONLINE (GROQ)";
+                document.getElementById('sugg-precision').innerText = "STATUS: ONLINE (GROQ LLAMA 3.1)";
                 lucide.createIcons();
 
             } catch (error) {
-                console.error("ERRO COMPLETO DA IA:", error);
-                content.innerHTML = `<div class="bg-red-500/10 border border-red-500/30 p-8 rounded-[2.5rem] text-center"><p class="text-red-500 text-xs font-black uppercase mb-2">Erro de Conexão IA</p><p class="text-[9px] text-gray-400 font-bold uppercase italic">${error.message}</p></div>`;
+                console.error("NOVO ERRO CAPTURADO:", error);
+                content.innerHTML = `<div class="bg-red-500/10 border border-red-500/30 p-8 rounded-[2.5rem] text-center"><p class="text-red-500 text-xs font-black uppercase mb-2">Falha na Requisição</p><p class="text-[9px] text-gray-400 font-bold uppercase italic">${error.message}</p></div>`;
             }
         }
 
