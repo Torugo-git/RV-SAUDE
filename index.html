@@ -72,6 +72,7 @@
         .cal-day.selected { background: var(--p-orange) !important; color: #fff !important; transform: scale(1.1); z-index: 10; box-shadow: 0 5px 15px rgba(255,69,0,0.3); border: none; }
         .cal-day.selected-rafaela { background: var(--p-purple) !important; color: #fff !important; box-shadow: 0 5px 15px rgba(157,0,255,0.3); border: none; }
         
+        /* Pontos no Calendário */
         .has-log::after { content: ''; position: absolute; bottom: 4px; width: 4px; height: 4px; background: var(--p-orange); border-radius: 50%; }
         .has-water::before { content: ''; position: absolute; top: 4px; left: 4px; width: 4px; height: 4px; background: var(--p-cyan); border-radius: 50%; box-shadow: 0 0 5px var(--p-cyan); }
         
@@ -82,7 +83,6 @@
         #pantry-render::-webkit-scrollbar-thumb { background: #444; border-radius: 10px; }
         .water-wave { background: linear-gradient(180deg, #00E5FF 0%, #0077FF 100%); transition: height 0.6s cubic-bezier(0.4, 0, 0.2, 1); opacity: 0.8; }
         
-        .macro-filter.active { background: var(--p-orange); color: white; border-color: var(--p-orange); }
         .weight-bar { transition: height 0.5s ease; background: var(--p-orange); width: 8px; border-radius: 4px 4px 0 0; }
 
         ::-webkit-scrollbar { width: 6px; }
@@ -92,6 +92,14 @@
         
         .custom-scroll::-webkit-scrollbar { width: 4px; }
         .custom-scroll::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
+
+        /* Estilos do Chat IA */
+        .chat-msg { animation: fadeIn 0.3s ease-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .typing-dot { animation: typingBounce 1.4s infinite ease-in-out both; }
+        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+        @keyframes typingBounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1); } }
     </style>
 </head>
 <body>
@@ -106,7 +114,7 @@
                     <i data-lucide="zap" class="w-10 h-10 fill-black"></i>
                 </div>
                 <h1 class="text-3xl font-black italic tracking-tighter uppercase text-white">R&V <span class="text-[#00E5FF]">VITALITY</span></h1>
-                <p class="text-[10px] font-bold text-gray-500 uppercase tracking-widest mt-2">Authentication Portal</p>
+                <p class="text-[10px] font-bold text-gray-500 uppercase tracking-widest mt-2">Portal de Autenticação</p>
             </div>
 
             <form id="login-form" class="space-y-5">
@@ -148,7 +156,7 @@
                     <div>
                         <h1 class="text-2xl font-black italic tracking-tighter uppercase text-white">R&V <span class="text-[#00E5FF]">VITALITY</span></h1>
                         <div class="flex items-center gap-2">
-                            <span class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Couples Evolution v4.2</span>
+                            <span class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Evolução do Casal v4.2</span>
                             <div id="couple-mode" class="hidden flex items-center gap-1.5 bg-[#1A0033] border border-[#9D00FF] text-[#D400FF] px-3 py-1 rounded-full text-[9px] font-black animate-pulse shadow-[0_0_10px_rgba(157,0,255,0.3)]">
                                 <i data-lucide="heart" class="w-2.5 h-2.5"></i> POWER COUPLE 
                                 <span class="flex items-center gap-0.5 text-[#FF4500] ml-1 bg-[#0A0014] px-1.5 py-0.5 rounded-md border border-[#FF4500]/30">
@@ -204,7 +212,7 @@
 
                     <section class="card-base card-calc p-6 relative">
                         <div class="flex justify-between items-center mb-6 text-gray-400">
-                            <h3 class="text-sm font-black uppercase flex items-center gap-2 tracking-widest"><i data-lucide="settings" class="w-4 h-4"></i> Setup Corpo</h3>
+                            <h3 class="text-sm font-black uppercase flex items-center gap-2 tracking-widest"><i data-lucide="settings" class="w-4 h-4"></i> Configuração Corporal</h3>
                             <div class="flex gap-2">
                                 <button onclick="exportData()" title="Exportar Backup" class="text-gray-500 hover:text-white transition-colors bg-transparent border-none"><i data-lucide="download" class="w-4 h-4"></i></button>
                                 <label title="Importar Backup" class="cursor-pointer text-gray-500 hover:text-white transition-colors">
@@ -223,7 +231,7 @@
                                 <div class="flex flex-col gap-1">Pescoço <input type="number" id="calc-neck" value="40"></div>
                                 <div class="flex flex-col gap-1">Cintura <input type="number" id="calc-waist" value="90"></div>
                             </div>
-                            <div id="hip-container" class="hidden flex flex-col gap-1 text-[10px] font-black uppercase text-gray-500">
+                            <div id="hip-container" class="hidden">
                                 Quadril <input type="number" id="calc-hip" value="100">
                             </div>
                             <div class="space-y-3">
@@ -233,9 +241,9 @@
                                     <option value="1.9">Atleta Elite</option>
                                 </select>
                                 <select id="calc-goal" class="text-[10px] uppercase font-black" style="color: var(--p-orange); border-color: #333;">
-                                    <option value="-500">Cutting (-500 kcal)</option>
+                                    <option value="-500">Cutting (Déficit -500 kcal)</option>
                                     <option value="0">Manutenção</option>
-                                    <option value="300">Bulking (+300 kcal)</option>
+                                    <option value="300">Bulking (Superávit +300 kcal)</option>
                                 </select>
                             </div>
                             <button onclick="calculateBodyMetas()" class="w-full py-4 bg-[#1A1A1A] text-white border border-[#333] hover:border-gray-500 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all">Sincronizar Setup</button>
@@ -250,10 +258,15 @@
 
                 <div class="lg:col-span-8 space-y-6 order-1 lg:order-2">
                     <section class="card-base card-stats p-8 relative overflow-hidden">
-                        <div class="absolute top-4 right-8 text-[10px] font-black text-gray-600 uppercase tracking-widest" id="date-label">CARREGANDO...</div>
+                        <div class="absolute top-4 right-8 flex items-center gap-3">
+                            <button onclick="clearDayLogs()" class="p-2 text-gray-600 hover:text-red-500 transition-colors bg-transparent border-none" title="Limpar Todo o Dia">
+                                <i data-lucide="trash-2" class="w-4 h-4"></i>
+                            </button>
+                            <span class="text-[10px] font-black text-gray-600 uppercase tracking-widest" id="date-label">CARREGANDO...</span>
+                        </div>
                         
-                        <button onclick="generateSuggestion()" class="absolute top-4 left-8 flex items-center gap-1.5 px-3 py-1.5 bg-[#141414] border border-[#222] rounded-full text-[9px] font-black text-[#00E5FF] hover:border-[#00E5FF] transition-all uppercase tracking-tighter shadow-sm z-20 cursor-pointer">
-                            <i data-lucide="wand-2" class="w-3 h-3"></i> IA Cardápio Inteligente
+                        <button onclick="openChatAssistant()" class="absolute top-4 left-8 flex items-center gap-1.5 px-3 py-1.5 bg-[#141414] border border-[#222] rounded-full text-[9px] font-black text-[#00E5FF] hover:border-[#00E5FF] transition-all uppercase tracking-tighter shadow-sm z-20 cursor-pointer">
+                            <i data-lucide="message-square-more" class="w-3 h-3"></i> Falar com Nutri IA
                         </button>
 
                         <div class="flex flex-col md:flex-row justify-between items-center gap-10 relative z-10 mt-6 md:mt-0">
@@ -299,11 +312,11 @@
                                 </button>
                             </div>
                             <div class="flex gap-2 mb-4">
-                                <button onclick="setMacroFilter('all')" class="macro-filter active flex-1 py-1 text-[9px] font-black uppercase rounded-lg border border-[#333] text-gray-400 hover:text-white transition-colors">ALL</button>
-                                <button onclick="setMacroFilter('P')" class="macro-filter flex-1 py-1 text-[9px] font-black uppercase rounded-lg border border-[#333] text-gray-400 hover:text-white transition-colors">PROT</button>
-                                <button onclick="setMacroFilter('C')" class="macro-filter flex-1 py-1 text-[9px] font-black uppercase rounded-lg border border-[#333] text-gray-400 hover:text-white transition-colors">CARB</button>
-                                <button onclick="setMacroFilter('G')" class="macro-filter flex-1 py-1 text-[9px] font-black uppercase rounded-lg border border-[#333] text-gray-400 hover:text-white transition-colors">GORD</button>
-                                <button onclick="setMacroFilter('F')" class="macro-filter flex-1 py-1 text-[9px] font-black uppercase rounded-lg border border-[#333] text-gray-400 hover:text-white transition-colors">FIBR</button>
+                                <button onclick="setMacroFilter('all')" class="macro-filter flex-1 py-1 text-[9px] font-black uppercase rounded-lg border transition-colors bg-[var(--p-orange)] text-white border-[var(--p-orange)]">TUDO</button>
+                                <button onclick="setMacroFilter('P')" class="macro-filter flex-1 py-1 text-[9px] font-black uppercase rounded-lg border border-[#333] text-gray-400 hover:text-white transition-colors bg-transparent">PROT</button>
+                                <button onclick="setMacroFilter('C')" class="macro-filter flex-1 py-1 text-[9px] font-black uppercase rounded-lg border border-[#333] text-gray-400 hover:text-white transition-colors bg-transparent">CARB</button>
+                                <button onclick="setMacroFilter('G')" class="macro-filter flex-1 py-1 text-[9px] font-black uppercase rounded-lg border border-[#333] text-gray-400 hover:text-white transition-colors bg-transparent">GORD</button>
+                                <button onclick="setMacroFilter('F')" class="macro-filter flex-1 py-1 text-[9px] font-black uppercase rounded-lg border border-[#333] text-gray-400 hover:text-white transition-colors bg-transparent">FIBR</button>
                             </div>
                             <div class="flex-1 overflow-y-auto pr-2 space-y-2 custom-scroll" id="pantry-render"></div>
                         </section>
@@ -311,7 +324,7 @@
                         <section class="card-base card-calendar p-6 h-[420px]">
                             <div class="flex justify-between items-center mb-6">
                                 <h3 class="text-sm font-black uppercase text-[#9D00FF] flex items-center gap-2 tracking-widest">
-                                    <i data-lucide="calendar-days" class="w-4 h-4"></i> Timeline
+                                    <i data-lucide="calendar-days" class="w-4 h-4"></i> Linha do Tempo
                                 </h3>
                                 <div class="flex items-center gap-1">
                                     <button onclick="changeMonth(-1)" class="p-1 text-gray-600 hover:text-white transition-colors bg-transparent border-none"><i data-lucide="chevron-left" class="w-5 h-5"></i></button>
@@ -377,7 +390,7 @@
                 <div class="bg-[#141414] border border-[#222] p-3 rounded-2xl"><p class="text-[9px] text-[#00E5FF] uppercase font-black mb-1">F</p><p id="m-f" class="font-black text-base text-[#00E5FF]">0</p></div>
             </div>
             <div class="flex gap-4">
-                <button onclick="closeModal('modal')" class="flex-1 font-black text-gray-500 uppercase text-[11px] bg-transparent border-none">Abortar</button>
+                <button onclick="closeModal('modal')" class="flex-1 font-black text-gray-500 uppercase text-[11px] bg-transparent border-none">Cancelar</button>
                 <button onclick="confirmLog()" class="flex-[2.5] py-5 bg-[#FF4500] text-white rounded-2xl font-black uppercase text-[11px] border-none shadow-[0_0_20px_rgba(255,69,0,0.4)]">Confirmar Log</button>
             </div>
         </div>
@@ -387,7 +400,7 @@
         <div class="bg-[#0A0A0A] border border-[#222] w-full max-sm p-8 rounded-[3rem] relative overflow-hidden">
             <h2 class="text-2xl font-black uppercase text-white mb-6 italic">Novo Alimento</h2>
             <div class="space-y-4 mb-8">
-                <input type="text" id="new-food-name" placeholder="Identificação">
+                <input type="text" id="new-food-name" placeholder="Identificação do Alimento">
                 <div class="grid grid-cols-2 gap-3">
                     <input type="number" id="new-food-p" placeholder="Prot (g)">
                     <input type="number" id="new-food-c" placeholder="Carbo (g)">
@@ -402,28 +415,50 @@
         </div>
     </div>
 
-    <div id="modal-suggestion" class="fixed inset-0 bg-[#000000]/95 backdrop-blur-xl hidden z-[60] flex items-center justify-center p-4">
-        <div class="bg-[#0A0A0A] border border-[#222] w-full max-w-2xl p-8 rounded-[3.5rem] relative overflow-hidden">
-            <div class="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-[#00E5FF] via-[#FF4500] to-[#9D00FF]"></div>
-            <div class="flex justify-between items-start mb-8">
+    <div id="modal-chat" class="fixed inset-0 bg-[#000000]/95 backdrop-blur-xl hidden z-[60] flex items-center justify-center p-4">
+        <div class="bg-[#0A0A0A] border border-[#222] w-full max-w-2xl h-[85vh] rounded-[3rem] relative overflow-hidden flex flex-col shadow-[0_20px_50px_rgba(0,0,0,0.8)]">
+            <div class="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-[#00E5FF] via-[#FF4500] to-[#9D00FF] z-10"></div>
+            
+            <div class="p-6 border-b border-[#222] flex justify-between items-center bg-[#0D0D0D]">
                 <div>
-                    <h2 class="text-4xl font-black uppercase tracking-tighter text-white italic">Script Nutricional</h2>
-                    <p class="text-[10px] text-[#00E5FF] font-black uppercase tracking-widest">Vitality Intelligence Engine (via Groq)</p>
+                    <h2 class="text-2xl font-black uppercase tracking-tighter text-white italic">Vitality AI</h2>
+                    <p class="text-[10px] text-[#00E5FF] font-black uppercase tracking-widest flex items-center gap-1">
+                        <span class="w-2 h-2 rounded-full bg-[#00E5FF] animate-pulse"></span> Nutricionista Clínico (Llama 70B)
+                    </p>
                 </div>
-                <button onclick="closeModal('modal-suggestion')" class="p-3 bg-[#111] rounded-2xl text-gray-500 hover:text-white border border-[#222] cursor-pointer">
-                    <i data-lucide="x" class="w-6 h-6"></i>
-                </button>
+                <div class="flex gap-3">
+                    <button onclick="clearChat()" class="p-3 bg-[#111] rounded-2xl text-gray-500 hover:text-red-500 border border-[#222] cursor-pointer transition-colors" title="Nova Conversa">
+                        <i data-lucide="trash-2" class="w-5 h-5"></i>
+                    </button>
+                    <button onclick="closeModal('modal-chat')" class="p-3 bg-[#111] rounded-2xl text-gray-500 hover:text-white border border-[#222] cursor-pointer transition-colors" title="Minimizar">
+                        <i data-lucide="minus" class="w-5 h-5"></i>
+                    </button>
+                </div>
             </div>
-            <div id="sugg-content" class="space-y-6 max-h-[60vh] overflow-y-auto pr-4 custom-scroll"></div>
-            <div class="mt-10 border-t border-[#222] pt-8 text-right">
-                 <span id="sugg-precision" class="text-[10px] font-black uppercase text-gray-500 italic mr-4">STATUS: OFFLINE</span>
-                <button onclick="closeModal('modal-suggestion')" class="w-full py-6 bg-white text-black rounded-3xl font-black uppercase text-sm tracking-widest hover:bg-gray-200 active:scale-95 transition-all border-none cursor-pointer">Fechar Relatório</button>
+
+            <div id="chat-loading-overlay" class="absolute inset-0 bg-black/80 z-50 hidden flex-col items-center justify-center backdrop-blur-sm">
+                <div class="w-12 h-12 border-4 border-[#FF4500] border-t-transparent rounded-full animate-spin mb-4"></div>
+                <p class="text-xs font-black text-white uppercase tracking-widest text-center px-4">Analisando Ingredientes e<br>Sincronizando com o Diário...</p>
+            </div>
+
+            <div id="chat-history" class="flex-1 overflow-y-auto p-6 space-y-6 custom-scroll bg-[#050505]">
+                </div>
+
+            <div class="p-4 bg-[#0D0D0D] border-t border-[#222]">
+                <form id="chat-form" class="flex gap-3">
+                    <input type="text" id="chat-input" placeholder="Peça uma sugestão (ex: Quero frango no almoço hoje)..." autocomplete="off" class="flex-1 bg-[#141414] border border-[#333] rounded-2xl px-5 py-4 text-sm font-semibold text-white focus:border-[#FF4500] transition-colors outline-none shadow-inner placeholder:text-gray-600">
+                    <button type="submit" class="bg-white text-black p-4 rounded-2xl hover:bg-gray-200 transition-colors flex items-center justify-center cursor-pointer shadow-[0_0_15px_rgba(255,255,255,0.1)] border-none">
+                        <i data-lucide="send" class="w-5 h-5"></i>
+                    </button>
+                </form>
             </div>
         </div>
     </div>
 
     <script>
         lucide.createIcons();
+
+        const turnoNomes = { morning: 'Café da Manhã', lunch: 'Almoço', dinner: 'Jantar' };
 
         // === FIREBASE ===
         const firebaseConfig = {
@@ -456,6 +491,134 @@
         };
 
         let state = JSON.parse(JSON.stringify(defaultState));
+        let chatMessages = []; 
+
+        const GROQ_API_KEY = "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"; 
+
+        // --- SISTEMA DE BUSCA APROXIMADA (FUZZY MATCHING) ---
+        function getClosestFoodMatch(aiName, pantry) {
+            aiName = aiName.toLowerCase().trim();
+            
+            // 1. Match Exato
+            let exact = pantry.find(f => f.name.toLowerCase().trim() === aiName);
+            if (exact) return exact;
+
+            // 2. Match por Substring (Se a IA disser "Ovo Cozido" e na despensa for "Ovo Inteiro (Cozido)")
+            let partial = pantry.find(f => f.name.toLowerCase().includes(aiName) || aiName.includes(f.name.toLowerCase()));
+            if (partial) return partial;
+
+            // 3. Fallback: Pontuação por Palavras-chave
+            let bestMatch = null;
+            let bestScore = 0;
+            pantry.forEach(f => {
+                let score = 0;
+                let pName = f.name.toLowerCase();
+                let words = aiName.split(' ');
+                words.forEach(w => { 
+                    // Ignora palavras muito pequenas como "de", "com", "em"
+                    if (w.length > 2 && pName.includes(w)) score++; 
+                });
+                if (score > bestScore) { 
+                    bestScore = score; 
+                    bestMatch = f; 
+                }
+            });
+            
+            return bestScore > 0 ? bestMatch : null;
+        }
+
+        // --- MOTOR MATEMÁTICO (LIMITES DE BOM SENSO) ---
+        function getLimits(foodName) {
+            const n = foodName.toLowerCase();
+            if (n.includes('azeite') || n.includes('manteiga') || n.includes('pasta') || n.includes('óleo')) return { min: 10, max: 30 };
+            if (n.includes('queijo') || n.includes('muçarela') || n.includes('cottage') || n.includes('parmesão')) return { min: 15, max: 60 };
+            if (n.includes('leite') || n.includes('suco') || n.includes('iogurte') || n.includes('bebida')) return { min: 100, max: 300 };
+            if (n.includes('cenoura') || n.includes('brócolis') || n.includes('salada') || n.includes('alface') || n.includes('tomate')) return { min: 40, max: 150 };
+            if (n.includes('pão') || n.includes('pao')) return { min: 30, max: 100 };
+            if (n.includes('whey')) return { min: 20, max: 60 };
+            if (n.includes('ovo')) return { min: 50, max: 200 };
+            return { min: 30, max: 250 }; 
+        }
+
+        function calculateOptimalWeights(foodNames, targetP, targetC, targetG) {
+            // Mapeia os nomes da IA para objetos reais da despensa usando o Fuzzy Match
+            let foods = foodNames.map(n => getClosestFoodMatch(n, state.pantry)).filter(Boolean);
+            if(foods.length === 0) return [];
+            
+            let weights = foods.map(f => getLimits(f.name).min); 
+            
+            let getErr = (wArr) => {
+                let cP = foods.reduce((acc, f, i) => acc + (f.p * wArr[i]/100), 0);
+                let cC = foods.reduce((acc, f, i) => acc + (f.c * wArr[i]/100), 0);
+                let cG = foods.reduce((acc, f, i) => acc + (f.g * wArr[i]/100), 0);
+                
+                let eP = targetP - cP; 
+                let eC = targetC - cC; 
+                let eG = targetG - cG;
+                
+                let pPen = (targetP <= 0 && cP > 0) ? cP*cP*10 : (eP < 0 ? eP*eP*3 : eP*eP);
+                let cPen = (targetC <= 0 && cC > 0) ? cC*cC*10 : (eC < 0 ? eC*eC*3 : eC*eC);
+                let gPen = (targetG <= 0 && cG > 0) ? cG*cG*10 : (eG < 0 ? eG*eG*3 : eG*eG);
+                
+                let macroErr = pPen + cPen + gPen;
+                
+                let realismPenalty = wArr.reduce((acc, w, idx) => {
+                    const limits = getLimits(foods[idx].name);
+                    let pen = 0;
+                    if (w > limits.max) pen += Math.pow(w - limits.max, 2) * 10;
+                    if (w < limits.min) pen += Math.pow(limits.min - w, 2) * 10;
+                    return acc + pen;
+                }, 0);
+                
+                return macroErr + realismPenalty;
+            };
+
+            let step = 5;
+            let currentErr = getErr(weights);
+            let improved = true;
+            let iterations = 0;
+
+            while(improved && iterations < 2000) {
+                improved = false;
+                let bestIdx = -1;
+                for(let i = 0; i < foods.length; i++) {
+                    weights[i] += step;
+                    let nErr = getErr(weights);
+                    if(nErr < currentErr) { currentErr = nErr; bestIdx = i; }
+                    weights[i] -= step; 
+                }
+                if(bestIdx !== -1) { weights[bestIdx] += step; improved = true; }
+                iterations++;
+            }
+
+            step = 1;
+            improved = true;
+            iterations = 0;
+            
+            while(improved && iterations < 1000) {
+                improved = false;
+                let bestIdx = -1;
+                let bestDirection = 0;
+                
+                for(let i = 0; i < foods.length; i++) {
+                    weights[i] += step;
+                    let errUp = getErr(weights);
+                    if(errUp < currentErr) { currentErr = errUp; bestIdx = i; bestDirection = 1; }
+                    weights[i] -= step; 
+                    
+                    weights[i] -= step;
+                    let errDown = getErr(weights);
+                    if(errDown < currentErr) { currentErr = errDown; bestIdx = i; bestDirection = -1; }
+                    weights[i] += step; 
+                }
+                
+                if(bestIdx !== -1) { weights[bestIdx] += (step * bestDirection); improved = true; }
+                iterations++;
+            }
+
+            return foods.map((f, i) => ({ nome: f.name, peso: weights[i] }));
+        }
+
 
         // --- SISTEMA DE LOGIN ---
         document.getElementById('login-form').addEventListener('submit', async (e) => {
@@ -486,7 +649,9 @@
 
         async function init() {
             await loadState();
-            updateUI(); renderPantry(); renderCalendar(); updateMonthDisplay();
+            switchUser(state.user); 
+            renderPantry(); 
+            updateMonthDisplay();
         }
 
         async function loadState() {
@@ -508,10 +673,13 @@
             logs.forEach(l => { curP+=l.p; curC+=l.c; curG+=l.g; curK+=l.kcal; curF+=(l.f || 0); });
 
             document.getElementById('main-kcal').innerText = Math.round(user.meta - curK);
-            document.getElementById('label-p').innerText = `${curP.toFixed(0)}/${user.p}g`;
-            document.getElementById('label-c').innerText = `${curC.toFixed(0)}/${user.c}g`;
-            document.getElementById('label-g').innerText = `${curG.toFixed(0)}/${user.g}g`;
-            document.getElementById('label-f').innerText = `${curF.toFixed(0)}/${user.fMeta}g`;
+            document.getElementById('meta-display').innerText = Math.round(user.meta);
+            document.getElementById('bf-badge').innerText = `BF ESTIMADO: ${user.bf ? user.bf.toFixed(1) : '--'}%`;
+            
+            document.getElementById('label-p').innerText = `${curP.toFixed(0)}/${Math.round(user.p)}g`;
+            document.getElementById('label-c').innerText = `${curC.toFixed(0)}/${Math.round(user.c)}g`;
+            document.getElementById('label-g').innerText = `${curG.toFixed(0)}/${Math.round(user.g)}g`;
+            document.getElementById('label-f').innerText = `${curF.toFixed(0)}/${Math.round(user.fMeta)}g`;
             
             document.getElementById('bar-p').style.width = Math.min(100, (curP/user.p*100)) + '%';
             document.getElementById('bar-c').style.width = Math.min(100, (curC/user.c*100)) + '%';
@@ -524,10 +692,22 @@
             document.getElementById('water-meta-label').innerText = `${(user.waterMeta/1000).toFixed(1)}L`;
             document.getElementById('date-label').innerText = state.selectedDate;
 
+            const chart = document.getElementById('weight-chart');
+            if (user.weightHistory && user.weightHistory.length > 0) {
+                const maxW = Math.max(...user.weightHistory.map(h => h.w));
+                const minW = Math.min(...user.weightHistory.map(h => h.w)) - 5;
+                chart.innerHTML = user.weightHistory.map(h => {
+                    const hPct = Math.max(10, ((h.w - minW) / (maxW - minW)) * 100);
+                    return `<div class="weight-bar flex-1 relative group rounded-t-lg transition-all" style="height: ${hPct}%"><span class="absolute -top-6 left-1/2 -translate-x-1/2 text-[9px] text-[#FF4500] font-black opacity-0 group-hover:opacity-100 transition-opacity">${h.w}</span></div>`;
+                }).join('');
+            } else {
+                chart.innerHTML = '';
+            }
+
             ['morning', 'lunch', 'dinner'].forEach(t => {
                 document.getElementById(`list-${t}`).innerHTML = logs.filter(l => l.turno === t).map(l => `
                     <div class="bg-[#141414] p-3 rounded-2xl border border-[#222] flex justify-between items-center group">
-                        <div class="flex flex-col"><span class="text-[10px] font-black text-white italic uppercase">${l.name}</span><span class="text-[8px] text-gray-500">${Math.round(l.kcal)} KCAL</span></div>
+                        <div class="flex flex-col"><span class="text-[10px] font-black text-white italic uppercase">${l.name}</span><span class="text-[8px] text-gray-500">${Math.round(l.weight)}g • ${Math.round(l.kcal)} KCAL</span></div>
                         <button onclick="deleteLog('${l.logId}')" class="opacity-0 group-hover:opacity-100 text-gray-600 hover:text-red-500 border-none bg-transparent"><i data-lucide="trash-2" class="w-3 h-3"></i></button>
                     </div>`).join('');
             });
@@ -535,35 +715,187 @@
             lucide.createIcons();
         }
 
-        // === IA ENGINE OTIMIZADO E COM CAPTURA DE ERRO 100% TRANSPARENTE ===
-        async function generateSuggestion() {
-            const user = state.data[state.user]; 
-            const logs = user.logs[state.selectedDate] || [];
-            let curP=0, curC=0, curG=0; logs.forEach(l => { curP+=l.p; curC+=l.c; curG+=l.g; });
-            const gapP = Math.max(0, user.p - curP); const gapC = Math.max(0, user.c - curC); const gapG = Math.max(0, user.g - curG);
+        function calculateBodyMetas() {
+            const weight = parseFloat(document.getElementById('calc-weight').value) || 0;
+            const height = parseFloat(document.getElementById('calc-height').value) || 0;
+            const neck = parseFloat(document.getElementById('calc-neck').value) || 0;
+            const waist = parseFloat(document.getElementById('calc-waist').value) || 0;
+            const hip = parseFloat(document.getElementById('calc-hip').value) || 0;
+            const activity = parseFloat(document.getElementById('calc-activity').value) || 1.2;
+            const goal = parseFloat(document.getElementById('calc-goal').value) || 0;
             
-            if (gapP < 5 && gapC < 5) return alert("Meta atingida!");
+            if (!weight || !height || !neck || !waist) return alert("Preencha as medidas base corretamente.");
 
-            const content = document.getElementById('sugg-content');
-            content.innerHTML = `<div class="flex flex-col items-center justify-center py-12 text-center"><div class="w-12 h-12 border-4 border-[#00E5FF] border-t-transparent rounded-full animate-spin mb-4"></div><p class="text-xs font-black uppercase text-gray-500 tracking-widest italic">Processando via Groq Llama 3.1...</p></div>`;
-            document.getElementById('modal-suggestion').classList.remove('hidden');
+            const isFemale = state.user === 'rafaela';
+            let bf = 0;
 
-            const remainingTurns = ['morning', 'lunch', 'dinner'].filter(t => !logs.some(l => l.turno === t));
+            if (isFemale) {
+                if (!hip) return alert("Preencha a medida do quadril para a Rafaela.");
+                bf = 495 / (1.29579 - 0.35004 * Math.log10(waist + hip - neck) + 0.22100 * Math.log10(height)) - 450;
+            } else {
+                bf = 495 / (1.0324 - 0.19077 * Math.log10(waist - neck) + 0.15456 * Math.log10(height)) - 450;
+            }
+
+            if (isNaN(bf) || bf < 3 || bf > 60) bf = isFemale ? 25 : 15; 
+
+            const lbm = weight * (1 - (bf / 100)); 
+            const bmr = 370 + (21.6 * lbm);
+            const tdee = bmr * activity;
+            const targetKcal = tdee + goal;
+
+            const p = weight * 2.0; 
+            const g = weight * 1.0; 
+            const remainingKcal = targetKcal - (p * 4) - (g * 9);
+            const c = Math.max(0, remainingKcal / 4); 
+            const fMeta = Math.round((targetKcal / 1000) * 14); 
+            const waterMeta = Math.round(weight * 35); 
+
+            state.data[state.user].bf = bf;
+            state.data[state.user].meta = targetKcal;
+            state.data[state.user].p = p;
+            state.data[state.user].c = c;
+            state.data[state.user].g = g;
+            state.data[state.user].fMeta = fMeta;
+            state.data[state.user].waterMeta = waterMeta;
             
-            // Tratamento caso a despensa esteja vazia (isso pode quebrar a lógica do Llama)
-            const pantryData = state.pantry.length > 0 
-                ? JSON.stringify(state.pantry.map(f => ({n: f.name, p: f.p, c: f.c, g: f.g}))) 
-                : "[]";
+            if (!state.data[state.user].weightHistory) state.data[state.user].weightHistory = [];
+            state.data[state.user].weightHistory.push({ date: state.selectedDate, w: weight });
+            if (state.data[state.user].weightHistory.length > 7) state.data[state.user].weightHistory.shift(); 
 
-            const systemPrompt = "Você é uma IA nutricional de elite. Você DEVE retornar EXCLUSIVAMENTE um objeto JSON válido, sem texto algum antes ou depois. Não utilize formatação markdown de código.";
+            saveState();
+            updateUI();
             
-            const userPrompt = `Crie uma sugestão para: ${remainingTurns.join(', ')}.
-Macros restantes: Proteína: ${gapP.toFixed(1)}g, Carbo: ${gapC.toFixed(1)}g, Gordura: ${gapG.toFixed(1)}g.
-Use APENAS estes alimentos: ${pantryData}.
-Retorne OBRIGATORIAMENTE no formato JSON com esta estrutura exata: {"cardapio": [{"turno": "nome_do_turno", "alimentos": [{"nome": "item", "peso": gramas}]}]}`;
+            alert(`Configuração Corporal Sincronizada!\n\nBF Estimado: ${bf.toFixed(1)}%\nMassa Magra: ${lbm.toFixed(1)}kg\nAlvo Kcal: ${Math.round(targetKcal)} kcal`);
+        }
 
-            // INSIRA SUA CHAVE DO GROQ ABAIXO
-            const GROQ_API_KEY = "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"; 
+        // --- SISTEMA DE CHAT IA COM MEMÓRIA LOCAL (LOCALSTORAGE) ---
+        function formatMarkdown(text) {
+            return text
+                .replace(/\*\*(.*?)\*\*/g, '<b class="text-[#00E5FF]">$1</b>') 
+                .replace(/\n/g, '<br>')
+                .replace(/\* (.*?)(<br>|$)/g, '<li class="ml-4 list-disc marker:text-[#FF4500]">$1</li>');
+        }
+
+        function appendChatBubble(role, content, msgIndex = -1) {
+            const chatHistory = document.getElementById('chat-history');
+            const div = document.createElement('div');
+            div.className = 'chat-msg flex flex-col gap-1';
+            
+            if (role === 'user') {
+                div.classList.add('items-end');
+                div.innerHTML = `
+                    <span class="text-[9px] font-black text-gray-500 uppercase tracking-widest mr-2">Você</span>
+                    <div class="bg-gradient-to-br from-[#FF4500] to-[#FF6B00] text-white px-5 py-4 rounded-3xl rounded-tr-sm max-w-[85%] text-sm font-semibold shadow-lg">
+                        ${content}
+                    </div>
+                `;
+            } else if (role === 'assistant') {
+                div.classList.add('items-start');
+                let inner = `
+                    <span class="text-[9px] font-black text-[#00E5FF] uppercase tracking-widest ml-2">Vitality IA</span>
+                    <div class="bg-[#141414] border border-[#222] text-gray-300 px-5 py-4 rounded-3xl rounded-tl-sm max-w-[95%] text-sm leading-relaxed shadow-lg">
+                        ${formatMarkdown(content)}
+                    </div>
+                `;
+                
+                if (msgIndex > -1) {
+                    inner += `
+                    <div class="mt-2 ml-2 flex justify-start w-full">
+                        <button onclick="extractAndApplyChat(${msgIndex})" class="px-4 py-2 bg-[#FF4500]/10 hover:bg-[#FF4500] text-[#FF4500] hover:text-white rounded-xl border border-[#FF4500]/30 transition-all text-[10px] font-black uppercase flex items-center gap-2 cursor-pointer shadow-sm">
+                            <i data-lucide="zap" class="w-4 h-4"></i> Auto-Completar no Diário
+                        </button>
+                    </div>`;
+                }
+                div.innerHTML = inner;
+            } else if (role === 'typing') {
+                div.id = 'typing-indicator';
+                div.classList.add('items-start');
+                div.innerHTML = `
+                    <span class="text-[9px] font-black text-[#00E5FF] uppercase tracking-widest ml-2">Vitality IA</span>
+                    <div class="bg-[#141414] border border-[#222] px-5 py-4 rounded-3xl rounded-tl-sm max-w-[85%] shadow-lg flex gap-1.5 items-center h-[52px]">
+                        <div class="w-2 h-2 bg-gray-500 rounded-full typing-dot"></div>
+                        <div class="w-2 h-2 bg-gray-500 rounded-full typing-dot"></div>
+                        <div class="w-2 h-2 bg-gray-500 rounded-full typing-dot"></div>
+                    </div>
+                `;
+            }
+            
+            chatHistory.appendChild(div);
+            lucide.createIcons();
+            chatHistory.scrollTop = chatHistory.scrollHeight;
+        }
+
+        function saveChatToLocal() {
+            localStorage.setItem(`vitality_chat_${state.user}`, JSON.stringify(chatMessages));
+        }
+
+        function loadChatFromLocal() {
+            const saved = localStorage.getItem(`vitality_chat_${state.user}`);
+            if (saved) {
+                chatMessages = JSON.parse(saved);
+                document.getElementById('chat-history').innerHTML = '';
+                // Remonta o chat ignorando a primeira msg que é o 'system' invisível
+                chatMessages.forEach((msg, index) => {
+                    if (msg.role !== 'system') {
+                        appendChatBubble(msg.role, msg.content, index);
+                    }
+                });
+                return true;
+            }
+            return false;
+        }
+
+        function clearChat() {
+            if(confirm("Deseja apagar o histórico de conversa com a IA?")) {
+                chatMessages = [];
+                localStorage.removeItem(`vitality_chat_${state.user}`);
+                openChatAssistant(); // Vai cair no gerador de nova mensagem inicial
+            }
+        }
+
+        function openChatAssistant() {
+            // Tenta carregar a memória. Se não tiver nada, cria o prompt inicial.
+            if (!loadChatFromLocal() || chatMessages.length === 0) {
+                const user = state.data[state.user]; 
+                const logs = user.logs[state.selectedDate] || [];
+                let curP=0, curC=0, curG=0; logs.forEach(l => { curP+=l.p; curC+=l.c; curG+=l.g; });
+                const gapP = Math.max(0, user.p - curP); const gapC = Math.max(0, user.c - curC); const gapG = Math.max(0, user.g - curG);
+                
+                const pantryData = state.pantry.map(f => f.name).join('; ');
+
+                const sysPrompt = `Você é o "Vitality IA", um Chef de Cozinha Nutricional de elite. 
+                Contexto: Faltam P: ${gapP.toFixed(1)}g, C: ${gapC.toFixed(1)}g, G: ${gapG.toFixed(1)}g.
+                Despensa disponível: ${pantryData}.
+                REGRAS ABSOLUTAS:
+                - NÃO TENTE CALCULAR AS GRAMATURAS EM HIPÓTESE NENHUMA. O sistema Javascript fará a matemática exata.
+                - Você deve APENAS sugerir ALIMENTOS que combinam entre si. Liste CLARAMENTE os nomes.
+                - Não misture doces (Whey/Leite) com pratos salgados de almoço/jantar.
+                - NUNCA use blocos de código markdown (como \`\`\`json).`;
+
+                chatMessages = [{ role: 'system', content: sysPrompt }];
+                document.getElementById('chat-history').innerHTML = ''; 
+                
+                const welcomeMsg = `Olá! Hoje faltam **${gapP.toFixed(1)}g de Proteína**, **${gapC.toFixed(1)}g de Carboidrato** e **${gapG.toFixed(1)}g de Gordura** para você bater sua meta.\n\nMe diga: quais refeições quer montar agora? Não se preocupe com os pesos, eu escolho os ingredientes que fazem sentido e o sistema calcula a matemática exata depois!`;
+                chatMessages.push({ role: 'assistant', content: welcomeMsg });
+                appendChatBubble('assistant', welcomeMsg, chatMessages.length - 1);
+                saveChatToLocal();
+            }
+            
+            document.getElementById('modal-chat').classList.remove('hidden');
+        }
+
+        document.getElementById('chat-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const input = document.getElementById('chat-input');
+            const userText = input.value.trim();
+            if (!userText) return;
+
+            appendChatBubble('user', userText);
+            chatMessages.push({ role: 'user', content: userText });
+            saveChatToLocal();
+            input.value = '';
+
+            appendChatBubble('typing', '');
 
             try {
                 const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
@@ -573,7 +905,57 @@ Retorne OBRIGATORIAMENTE no formato JSON com esta estrutura exata: {"cardapio": 
                         'Authorization': `Bearer ${GROQ_API_KEY}`
                     },
                     body: JSON.stringify({
-                        model: "llama-3.1-8b-instant", // Modelo mais moderno e estável na infra do Groq
+                        model: "llama-3.3-70b-versatile",
+                        messages: chatMessages,
+                        temperature: 0.4
+                    })
+                });
+
+                if (!response.ok) throw new Error("Erro na API");
+
+                const result = await response.json();
+                const aiResponse = result.choices[0].message.content;
+                
+                document.getElementById('typing-indicator').remove();
+                chatMessages.push({ role: 'assistant', content: aiResponse });
+                appendChatBubble('assistant', aiResponse, chatMessages.length - 1);
+                saveChatToLocal();
+
+            } catch (error) {
+                console.error(error);
+                document.getElementById('typing-indicator').remove();
+                appendChatBubble('assistant', `**Erro de Conexão:** Não consegui acessar o servidor clínico. Tente novamente.`);
+            }
+        });
+
+        // --- BOTÃO MÁGICO: LER TEXTO -> JS SOLVER (C/ FUZZY MATCH) -> DIÁRIO ---
+        async function extractAndApplyChat(msgIndex) {
+            const textContent = chatMessages[msgIndex].content;
+            if (!textContent) return;
+
+            const overlay = document.getElementById('chat-loading-overlay');
+            overlay.classList.remove('hidden');
+            overlay.classList.add('flex');
+
+            const pantryData = state.pantry.length > 0 ? JSON.stringify(state.pantry.map(f => f.name)) : "[]";
+            
+            const systemPrompt = "Você é um extrator de dados estrito. Retorne APENAS JSON válido. Ignore pesos/gramaturas.";
+            const userPrompt = `Leia o texto sugerido pelo Chef e extraia APENAS os nomes dos ingredientes.
+            Texto: "${textContent}"
+            Turnos: 'morning', 'lunch', 'dinner'.
+            Nomes da despensa de referência: ${pantryData}. Extraia o nome da forma como foi escrito no texto.
+            Formato: {"cardapio": [{"turno": "morning", "alimentos": ["Ovo cozido", "Pão"]}]}
+            Se não houver refeição clara, retorne {"cardapio": []}.`;
+
+            try {
+                const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${GROQ_API_KEY}`
+                    },
+                    body: JSON.stringify({
+                        model: "llama-3.3-70b-versatile",
                         messages: [
                             { role: "system", content: systemPrompt },
                             { role: "user", content: userPrompt }
@@ -583,63 +965,196 @@ Retorne OBRIGATORIAMENTE no formato JSON com esta estrutura exata: {"cardapio": 
                     })
                 });
 
-                if (!response.ok) {
-                    // Aqui agora capturamos o MOTIVO REAL do erro 400
-                    const errData = await response.json();
-                    throw new Error(`[Status ${response.status}] Motivo: ${errData.error?.message || "Erro interno da API"}`);
-                }
+                if (!response.ok) throw new Error("Erro na Extração JSON");
 
                 const result = await response.json();
                 let jsonText = result.choices[0].message.content.trim();
-                
-                // Limpeza agressiva do block code markdown caso o Llama decida ignorar a regra do system prompt
                 jsonText = jsonText.replace(/^```json/i, '').replace(/```$/i, '').trim();
                 
-                const jsonResponse = JSON.parse(jsonText);
-                const cardapio = jsonResponse.cardapio || [];
+                const parsed = JSON.parse(jsonText);
+                const turnos = parsed.cardapio || [];
 
-                if (cardapio.length === 0) {
-                     content.innerHTML = `<div class="text-center text-gray-500 py-8 font-black uppercase text-xs tracking-widest">A despensa parece não ter opções viáveis.</div>`;
-                     document.getElementById('sugg-precision').innerText = "STATUS: ONLINE (SEM DADOS)";
-                     return;
+                if (turnos.length === 0) {
+                    alert("A IA não identificou nenhuma lista clara de alimentos para injetar.");
+                } else {
+                    
+                    const user = state.data[state.user]; 
+                    const logs = user.logs[state.selectedDate] || [];
+                    let curP=0, curC=0, curG=0; logs.forEach(l => { curP+=l.p; curC+=l.c; curG+=l.g; });
+                    
+                    let runP = Math.max(0, user.p - curP); 
+                    let runC = Math.max(0, user.c - curC); 
+                    let runG = Math.max(0, user.g - curG);
+                    
+                    let mealsLeft = turnos.length;
+                    let addedCount = 0;
+
+                    if(!state.data[state.user].logs[state.selectedDate]) state.data[state.user].logs[state.selectedDate] = [];
+                    
+                    turnos.forEach(s => {
+                        let safeTurno = ['morning', 'lunch', 'dinner'].includes(s.turno) ? s.turno : 'lunch';
+                        
+                        let mealTargetP = runP / mealsLeft;
+                        let mealTargetC = runC / mealsLeft;
+                        let mealTargetG = runG / mealsLeft;
+                        
+                        let optimized = calculateOptimalWeights(s.alimentos, mealTargetP, mealTargetC, mealTargetG);
+                        
+                        optimized.forEach(a => {
+                            // Aqui usa a nova Busca Aproximada em vez de ===
+                            const foodObj = getClosestFoodMatch(a.nome, state.pantry);
+                            
+                            if(foodObj && a.peso > 0) {
+                                const factor = a.peso / 100;
+                                state.data[state.user].logs[state.selectedDate].push({
+                                    logId: Date.now().toString() + Math.random().toString(36).substr(2, 5), 
+                                    name: foodObj.name,
+                                    turno: safeTurno,
+                                    weight: a.peso,
+                                    p: foodObj.p * factor,
+                                    c: foodObj.c * factor,
+                                    g: foodObj.g * factor,
+                                    f: (foodObj.f || 0) * factor,
+                                    kcal: (foodObj.p*4 + foodObj.c*4 + foodObj.g*9)*factor
+                                });
+                                
+                                runP -= (foodObj.p * factor);
+                                runC -= (foodObj.c * factor);
+                                runG -= (foodObj.g * factor);
+                                addedCount++;
+                            }
+                        });
+                        mealsLeft--;
+                    });
+
+                    if (addedCount > 0) {
+                        saveState(); 
+                        updateUI();
+                        renderCalendar(); 
+                        alert(`Mágica feita! ${addedCount} alimento(s) foram injetados no seu diário com gramaturas perfeitas para bater a meta.`);
+                        closeModal('modal-chat');
+                    } else {
+                        alert("Não foi possível gerar gramaturas para os itens extraídos. Verifique se eles existem na sua despensa.");
+                    }
                 }
-
-                content.innerHTML = cardapio.map(s => `
-                    <div class="bg-[#141414] border border-[#222] p-8 rounded-[2.5rem] relative overflow-hidden mb-4 shadow-xl">
-                        <div class="absolute top-0 left-0 w-1.5 h-full bg-[#00E5FF]"></div>
-                        <h3 class="text-[10px] font-black uppercase text-[#00E5FF] mb-6 tracking-widest italic">${s.turno.toUpperCase()} SUGERIDO</h3>
-                        <div class="space-y-4">
-                            ${s.alimentos.map(a => `
-                                <div class="flex justify-between items-center border-b border-[#222] pb-2">
-                                    <span class="text-sm font-black text-white uppercase italic">${a.nome}</span>
-                                    <span class="text-lg font-black text-white">${Math.round(a.peso)}g</span>
-                                </div>`).join('')}
-                        </div>
-                    </div>`).join('');
-                
-                document.getElementById('sugg-precision').innerText = "STATUS: ONLINE (GROQ LLAMA 3.1)";
-                lucide.createIcons();
-
             } catch (error) {
-                console.error("NOVO ERRO CAPTURADO:", error);
-                content.innerHTML = `<div class="bg-red-500/10 border border-red-500/30 p-8 rounded-[2.5rem] text-center"><p class="text-red-500 text-xs font-black uppercase mb-2">Falha na Requisição</p><p class="text-[9px] text-gray-400 font-bold uppercase italic">${error.message}</p></div>`;
+                console.error("Erro no Auto-Completar:", error);
+                alert("Falha técnica ao tentar ler a sugestão.");
+            } finally {
+                overlay.classList.add('hidden');
+                overlay.classList.remove('flex');
             }
         }
 
-        // --- FUNÇÕES AUXILIARES ---
-        function switchUser(u) { state.user = u; document.documentElement.style.setProperty('--p-orange', u === 'victor' ? '#FF4500' : '#9D00FF'); updateUI(); renderCalendar(); }
-        function addWater(ml) { const user = state.data[state.user]; user.waterLogs[state.selectedDate] = (user.waterLogs[state.selectedDate] || 0) + ml; saveState(); updateUI(); }
-        function resetWater() { state.data[state.user].waterLogs[state.selectedDate] = 0; saveState(); updateUI(); }
-        
+        // --- SISTEMA DE FILTRO DA DESPENSA ---
+        function setMacroFilter(type) {
+            state.pantryFilter = type;
+            document.querySelectorAll('.macro-filter').forEach(btn => {
+                if (btn.getAttribute('onclick').includes(`'${type}'`)) {
+                    btn.className = `macro-filter flex-1 py-1 text-[9px] font-black uppercase rounded-lg border transition-colors bg-[var(--p-orange)] text-white border-[var(--p-orange)]`;
+                } else {
+                    btn.className = `macro-filter flex-1 py-1 text-[9px] font-black uppercase rounded-lg border border-[#333] text-gray-400 hover:text-white transition-colors bg-transparent`;
+                }
+            });
+            renderPantry();
+        }
+
         function renderPantry() {
             const term = document.getElementById('pantry-search').value.toLowerCase();
             let filtered = state.pantry.filter(f => f.name.toLowerCase().includes(term));
-            document.getElementById('pantry-render').innerHTML = filtered.map(f => `
-                <div onclick="openFood(${f.id})" class="p-4 bg-[#141414] border border-[#222] rounded-2xl cursor-pointer hover:border-[#FF4500] transition-colors">
-                    <span class="text-[10px] font-black uppercase text-white">${f.name}</span>
-                </div>`).join('');
+
+            if (state.pantryFilter !== 'all') {
+                filtered = filtered.filter(f => {
+                    if (state.pantryFilter === 'P') return f.p > 0;
+                    if (state.pantryFilter === 'C') return f.c > 0;
+                    if (state.pantryFilter === 'G') return f.g > 0;
+                    if (state.pantryFilter === 'F') return (f.f || 0) > 0;
+                    return true;
+                });
+                
+                filtered.sort((a, b) => {
+                    if (state.pantryFilter === 'P') return b.p - a.p;
+                    if (state.pantryFilter === 'C') return b.c - a.c;
+                    if (state.pantryFilter === 'G') return b.g - a.g;
+                    if (state.pantryFilter === 'F') return (b.f || 0) - (a.f || 0);
+                    return 0;
+                });
+            } else {
+                filtered.sort((a, b) => a.name.localeCompare(b.name));
+            }
+
+            document.getElementById('pantry-render').innerHTML = filtered.map(f => {
+                const kcal = Math.round(f.p*4 + f.c*4 + f.g*9);
+                return `
+                <div onclick="openFood(${f.id})" class="p-4 bg-[#141414] border border-[#222] rounded-2xl cursor-pointer hover:border-[#FF4500] transition-colors flex flex-col gap-2 shadow-sm">
+                    <div class="flex justify-between items-start">
+                        <span class="text-[11px] font-black uppercase text-white">${f.name}</span>
+                        <span class="text-[9px] font-black text-gray-500 bg-[#1A1A1A] px-2 py-0.5 rounded-md">${kcal} KCAL</span>
+                    </div>
+                    <div class="flex gap-3 text-[9px] font-black uppercase tracking-widest mt-1">
+                        <span class="text-[#FF4500]">P: ${f.p}g</span>
+                        <span class="text-[#9D00FF]">C: ${f.c}g</span>
+                        <span class="text-[#FFB800]">G: ${f.g}g</span>
+                        <span class="text-[#00E5FF]">F: ${f.f || 0}g</span>
+                    </div>
+                </div>`;
+            }).join('');
         }
-        
+
+        // --- SISTEMA DE CALENDÁRIO COM ATUALIZAÇÃO DINÂMICA ---
+        function renderCalendar() {
+            const grid = document.getElementById('calendar-grid'); grid.innerHTML = '';
+            const days = new Date(state.currentYear, state.currentMonth + 1, 0).getDate();
+            const user = state.data[state.user];
+            
+            for(let d=1; d<=days; d++){
+                const ds = `${state.currentYear}-${String(state.currentMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+                
+                const wLog = user.waterLogs[ds] || 0;
+                const hasWater = wLog > 0 && wLog >= user.waterMeta;
+                
+                const dayLogs = user.logs[ds] || [];
+                const dayKcal = dayLogs.reduce((acc, l) => acc + l.kcal, 0);
+                const hasDieta = dayKcal >= (user.meta * 0.80); 
+                
+                let cls = `cal-day ${state.selectedDate===ds ? (state.user==='rafaela'?'selected-rafaela':'selected') : ''}`;
+                if(hasWater) cls += ' has-water';
+                if(hasDieta) cls += ' has-log';
+
+                grid.innerHTML += `<div onclick="state.selectedDate='${ds}'; updateUI(); renderCalendar();" class="${cls}">${d}</div>`;
+            }
+        }
+
+        // --- EVENTOS QUE AFETAM O CALENDÁRIO E DIÁRIO ---
+        function clearDayLogs() {
+            if(confirm("Tem certeza que deseja apagar todas as refeições deste dia?")) {
+                state.data[state.user].logs[state.selectedDate] = [];
+                saveState();
+                updateUI();
+                renderCalendar();
+            }
+        }
+
+        function addWater(ml) { const user = state.data[state.user]; user.waterLogs[state.selectedDate] = (user.waterLogs[state.selectedDate] || 0) + ml; saveState(); updateUI(); renderCalendar(); }
+        function resetWater() { state.data[state.user].waterLogs[state.selectedDate] = 0; saveState(); updateUI(); renderCalendar(); }
+        function confirmLog() {
+            const g = parseFloat(document.getElementById('m-grams').value); if(!g) return;
+            const factor = g/100; if(!state.data[state.user].logs[state.selectedDate]) state.data[state.user].logs[state.selectedDate] = [];
+            state.data[state.user].logs[state.selectedDate].push({ logId: Date.now().toString(), name: state.activeFood.name, turno: state.selectedTurno, weight: g, p: state.activeFood.p * factor, c: state.activeFood.c * factor, g: state.activeFood.g * factor, f: (state.activeFood.f || 0) * factor, kcal: (state.activeFood.p*4 + state.activeFood.c*4 + state.activeFood.g*9)*factor });
+            saveState(); updateUI(); renderCalendar(); closeModal('modal');
+        }
+        function deleteLog(id) { state.data[state.user].logs[state.selectedDate] = state.data[state.user].logs[state.selectedDate].filter(l => l.logId !== id); saveState(); updateUI(); renderCalendar(); }
+
+        // --- FUNÇÕES AUXILIARES PADRÕES ---
+        function switchUser(u) { 
+            state.user = u; 
+            document.documentElement.style.setProperty('--p-orange', u === 'victor' ? '#FF4500' : '#9D00FF'); 
+            document.getElementById('hip-container').className = u === 'rafaela' ? 'flex flex-col gap-1 text-[10px] font-black uppercase text-gray-500' : 'hidden';
+            updateUI(); 
+            renderCalendar(); 
+            loadChatFromLocal(); // Tenta puxar a memoria do chat do usuario que entrou
+        }
+
         function openFood(id) { state.activeFood = state.pantry.find(x => x.id === id); document.getElementById('m-name').innerText = state.activeFood.name; document.getElementById('modal').classList.remove('hidden'); }
         function openAddFoodModal() { document.getElementById('modal-food').classList.remove('hidden'); }
         
@@ -652,14 +1167,6 @@ Retorne OBRIGATORIAMENTE no formato JSON com esta estrutura exata: {"cardapio": 
             if(!name) return; state.pantry.push({ id: Date.now(), name, p, c, g, f }); saveState(); renderPantry(); closeModal('modal-food');
         }
         
-        function confirmLog() {
-            const g = parseFloat(document.getElementById('m-grams').value); if(!g) return;
-            const factor = g/100; if(!state.data[state.user].logs[state.selectedDate]) state.data[state.user].logs[state.selectedDate] = [];
-            state.data[state.user].logs[state.selectedDate].push({ logId: Date.now().toString(), name: state.activeFood.name, turno: state.selectedTurno, weight: g, p: state.activeFood.p * factor, c: state.activeFood.c * factor, g: state.activeFood.g * factor, f: (state.activeFood.f || 0) * factor, kcal: (state.activeFood.p*4 + state.activeFood.c*4 + state.activeFood.g*9)*factor });
-            saveState(); updateUI(); closeModal('modal');
-        }
-        
-        function deleteLog(id) { state.data[state.user].logs[state.selectedDate] = state.data[state.user].logs[state.selectedDate].filter(l => l.logId !== id); saveState(); updateUI(); }
         function calculateStreak(u) { return state.data[u].streak || 0; }
         function setTurno(t, btn) { state.selectedTurno = t; document.querySelectorAll('.turno-btn').forEach(b => { b.classList.replace('bg-[#1A1A1A]', 'bg-[#0D0D0D]'); b.classList.remove('border-[#FF4500]'); }); btn.classList.replace('bg-[#0D0D0D]', 'bg-[#1A1A1A]'); btn.classList.add('border-[#FF4500]'); }
         
@@ -672,25 +1179,29 @@ Retorne OBRIGATORIAMENTE no formato JSON com esta estrutura exata: {"cardapio": 
             document.getElementById('m-kcal').innerText = ((state.activeFood.p*4 + state.activeFood.c*4 + state.activeFood.g*9)*factor).toFixed(0);
         }
         
-        function renderCalendar() {
-            const grid = document.getElementById('calendar-grid'); grid.innerHTML = '';
-            const days = new Date(state.currentYear, state.currentMonth + 1, 0).getDate();
-            for(let d=1; d<=days; d++){
-                const ds = `${state.currentYear}-${String(state.currentMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-                grid.innerHTML += `<div onclick="state.selectedDate='${ds}'; updateUI(); renderCalendar();" class="cal-day ${state.selectedDate===ds ? 'selected' : ''}">${d}</div>`;
-            }
+        function copyYesterday() {
+            const yesterday = new Date(state.selectedDate);
+            yesterday.setDate(yesterday.getDate() - 1);
+            const ds = yesterday.toISOString().split('T')[0];
+            const logs = state.data[state.user].logs[ds] || [];
+            if(logs.length === 0) return alert("Nenhuma refeição registrada ontem.");
+            
+            if(!state.data[state.user].logs[state.selectedDate]) state.data[state.user].logs[state.selectedDate] = [];
+            
+            // Copia gerando novos IDs para não conflitar chaves
+            logs.forEach(l => {
+                const newLog = {...l, logId: Date.now().toString() + Math.random().toString(36).substr(2, 5)};
+                state.data[state.user].logs[state.selectedDate].push(newLog);
+            });
+            
+            saveState(); updateUI(); renderCalendar();
+            alert("Cardápio de ontem duplicado com sucesso!");
         }
-        
+
         function changeMonth(o) { state.currentMonth += o; if(state.currentMonth>11){state.currentMonth=0;state.currentYear++} if(state.currentMonth<0){state.currentMonth=11;state.currentYear--} updateMonthDisplay(); renderCalendar(); }
         function updateMonthDisplay() { const d = new Date(state.currentYear, state.currentMonth); document.getElementById('current-month-display').innerText = d.toLocaleString('pt-br', {month:'short', year:'numeric'}); }
         function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
         function logout() { auth.signOut(); }
-
-        // Inicializar Setup UI se necessário
-        function calculateBodyMetas() {
-            alert("Setup Sincronizado!");
-            saveState();
-        }
 
     </script>
 </body>
