@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>R&V Vitality | Prime v4.2</title>
+    <title>R&V Vitality | Prime v4.3</title>
     
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#050505">
@@ -156,7 +156,7 @@
                     <div>
                         <h1 class="text-2xl font-black italic tracking-tighter uppercase text-white">R&V <span class="text-[#00E5FF]">VITALITY</span></h1>
                         <div class="flex items-center gap-2">
-                            <span class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Evolução do Casal v4.2</span>
+                            <span class="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Evolução do Casal v4.3</span>
                             <div id="couple-mode" class="hidden flex items-center gap-1.5 bg-[#1A0033] border border-[#9D00FF] text-[#D400FF] px-3 py-1 rounded-full text-[9px] font-black animate-pulse shadow-[0_0_10px_rgba(157,0,255,0.3)]">
                                 <i data-lucide="heart" class="w-2.5 h-2.5"></i> POWER COUPLE 
                                 <span class="flex items-center gap-0.5 text-[#FF4500] ml-1 bg-[#0A0014] px-1.5 py-0.5 rounded-md border border-[#FF4500]/30">
@@ -200,10 +200,10 @@
                                 <div class="absolute inset-0 flex items-center justify-center font-black text-white text-sm drop-shadow-md z-10" id="water-pct">0%</div>
                             </div>
                             <div class="grid grid-cols-1 gap-3">
-                                <button onclick="addWater(250)" class="px-4 py-3 bg-[#141414] border border-[#222] hover:border-[#00E5FF] hover:text-[#00E5FF] rounded-xl text-gray-400 font-black text-[10px] flex items-center gap-2 transition-all">
+                                <button onclick="addWater(250)" class="px-4 py-3 bg-[#141414] border border-[#222] hover:border-[#00E5FF] hover:text-[#00E5FF] rounded-xl text-gray-400 font-black text-[10px] flex items-center gap-2 transition-all cursor-pointer">
                                     <i data-lucide="glass-water" class="w-4 h-4"></i> +250ml
                                 </button>
-                                <button onclick="addWater(500)" class="px-4 py-3 bg-[#00E5FF] hover:bg-[#00B3CC] rounded-xl text-black font-black text-[10px] flex items-center gap-2 transition-all shadow-[0_0_15px_rgba(0,229,255,0.3)] border-none">
+                                <button onclick="addWater(500)" class="px-4 py-3 bg-[#00E5FF] hover:bg-[#00B3CC] rounded-xl text-black font-black text-[10px] flex items-center gap-2 transition-all shadow-[0_0_15px_rgba(0,229,255,0.3)] border-none cursor-pointer">
                                     <i data-lucide="container" class="w-4 h-4 fill-black"></i> +500ml
                                 </button>
                             </div>
@@ -214,7 +214,7 @@
                         <div class="flex justify-between items-center mb-6 text-gray-400">
                             <h3 class="text-sm font-black uppercase flex items-center gap-2 tracking-widest"><i data-lucide="settings" class="w-4 h-4"></i> Configuração Corporal</h3>
                             <div class="flex gap-2">
-                                <button onclick="exportData()" title="Exportar Backup" class="text-gray-500 hover:text-white transition-colors bg-transparent border-none"><i data-lucide="download" class="w-4 h-4"></i></button>
+                                <button onclick="exportData()" title="Exportar Backup" class="text-gray-500 hover:text-white transition-colors bg-transparent border-none cursor-pointer"><i data-lucide="download" class="w-4 h-4"></i></button>
                                 <label title="Importar Backup" class="cursor-pointer text-gray-500 hover:text-white transition-colors">
                                     <i data-lucide="upload" class="w-4 h-4"></i>
                                     <input type="file" id="import-file" class="hidden" accept=".json" onchange="importData(event)">
@@ -246,7 +246,7 @@
                                     <option value="300">Bulking (Superávit +300 kcal)</option>
                                 </select>
                             </div>
-                            <button onclick="calculateBodyMetas()" class="w-full py-4 bg-[#1A1A1A] text-white border border-[#333] hover:border-gray-500 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all">Sincronizar Setup</button>
+                            <button onclick="calculateBodyMetas()" class="w-full py-4 bg-[#1A1A1A] text-white border border-[#333] hover:border-gray-500 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all cursor-pointer">Sincronizar Setup</button>
 
                             <div class="mt-4 pt-4 border-t border-[#222]">
                                 <p class="text-[9px] font-black text-gray-600 uppercase tracking-widest mb-2">Histórico de Peso (Últimos 7)</p>
@@ -259,7 +259,7 @@
                 <div class="lg:col-span-8 space-y-6 order-1 lg:order-2">
                     <section class="card-base card-stats p-8 relative overflow-hidden">
                         <div class="absolute top-4 right-8 flex items-center gap-3">
-                            <button onclick="clearDayLogs()" class="p-2 text-gray-600 hover:text-red-500 transition-colors bg-transparent border-none" title="Limpar Todo o Dia">
+                            <button onclick="clearDayLogs()" class="p-2 text-gray-600 hover:text-red-500 transition-colors bg-transparent border-none cursor-pointer" title="Limpar Todo o Dia">
                                 <i data-lucide="trash-2" class="w-4 h-4"></i>
                             </button>
                             <span class="text-[10px] font-black text-gray-600 uppercase tracking-widest" id="date-label">CARREGANDO...</span>
@@ -307,7 +307,7 @@
                                     <i data-lucide="search" class="w-5 h-5 text-gray-500"></i>
                                     <input type="text" id="pantry-search" oninput="renderPantry()" placeholder="LOCALIZAR ALIMENTO..." class="bg-transparent border-none p-0 text-xs font-black uppercase tracking-widest placeholder:text-gray-600 w-full focus:shadow-none focus:ring-0 text-white">
                                 </div>
-                                <button onclick="openAddFoodModal()" class="w-12 h-12 bg-[#FF4500] rounded-2xl shadow-[0_0_15px_rgba(255,69,0,0.3)] flex items-center justify-center transition-colors border-none">
+                                <button onclick="openAddFoodModal()" class="w-12 h-12 bg-[#FF4500] rounded-2xl shadow-[0_0_15px_rgba(255,69,0,0.3)] flex items-center justify-center transition-colors border-none cursor-pointer">
                                     <i data-lucide="plus" class="w-6 h-6"></i>
                                 </button>
                             </div>
@@ -327,9 +327,9 @@
                                     <i data-lucide="calendar-days" class="w-4 h-4"></i> Linha do Tempo
                                 </h3>
                                 <div class="flex items-center gap-1">
-                                    <button onclick="changeMonth(-1)" class="p-1 text-gray-600 hover:text-white transition-colors bg-transparent border-none"><i data-lucide="chevron-left" class="w-5 h-5"></i></button>
+                                    <button onclick="changeMonth(-1)" class="p-1 text-gray-600 hover:text-white transition-colors bg-transparent border-none cursor-pointer"><i data-lucide="chevron-left" class="w-5 h-5"></i></button>
                                     <span id="current-month-display" class="text-[10px] font-black text-gray-300 uppercase bg-[#141414] border border-[#222] px-2 py-1 rounded">--</span>
-                                    <button onclick="changeMonth(1)" class="p-1 text-gray-600 hover:text-white transition-colors bg-transparent border-none"><i data-lucide="chevron-right" class="w-5 h-5"></i></button>
+                                    <button onclick="changeMonth(1)" class="p-1 text-gray-600 hover:text-white transition-colors bg-transparent border-none cursor-pointer"><i data-lucide="chevron-right" class="w-5 h-5"></i></button>
                                 </div>
                             </div>
                             <div id="calendar-grid" class="grid grid-cols-7 gap-2"></div>
@@ -342,7 +342,7 @@
 
                     <section class="card-base card-meals p-8">
                         <div class="flex justify-end mb-4">
-                            <button onclick="copyYesterday()" class="px-4 py-2 bg-[#1A1A1A] border border-[#333] text-gray-400 hover:text-white rounded-xl text-[10px] font-black uppercase flex items-center gap-2 transition-colors">
+                            <button onclick="copyYesterday()" class="px-4 py-2 bg-[#1A1A1A] border border-[#333] text-gray-400 hover:text-white rounded-xl text-[10px] font-black uppercase flex items-center gap-2 transition-colors cursor-pointer">
                                 <i data-lucide="copy" class="w-4 h-4"></i> Duplicar Ontem
                             </button>
                         </div>
@@ -390,27 +390,57 @@
                 <div class="bg-[#141414] border border-[#222] p-3 rounded-2xl"><p class="text-[9px] text-[#00E5FF] uppercase font-black mb-1">F</p><p id="m-f" class="font-black text-base text-[#00E5FF]">0</p></div>
             </div>
             <div class="flex gap-4">
-                <button onclick="closeModal('modal')" class="flex-1 font-black text-gray-500 uppercase text-[11px] bg-transparent border-none">Cancelar</button>
-                <button onclick="confirmLog()" class="flex-[2.5] py-5 bg-[#FF4500] text-white rounded-2xl font-black uppercase text-[11px] border-none shadow-[0_0_20px_rgba(255,69,0,0.4)]">Confirmar Log</button>
+                <button onclick="closeModal('modal')" class="flex-1 font-black text-gray-500 uppercase text-[11px] bg-transparent border-none cursor-pointer">Cancelar</button>
+                <button onclick="confirmLog()" class="flex-[2.5] py-5 bg-[#FF4500] text-white rounded-2xl font-black uppercase text-[11px] border-none shadow-[0_0_20px_rgba(255,69,0,0.4)] cursor-pointer">Confirmar Log</button>
             </div>
         </div>
     </div>
 
-    <div id="modal-food" class="fixed inset-0 bg-[#000000]/80 hidden z-50 flex items-center justify-center p-4">
-        <div class="bg-[#0A0A0A] border border-[#222] w-full max-sm p-8 rounded-[3rem] relative overflow-hidden">
-            <h2 class="text-2xl font-black uppercase text-white mb-6 italic">Novo Alimento</h2>
+    <div id="modal-food" class="fixed inset-0 bg-[#000000]/90 backdrop-blur-md hidden z-[70] flex items-center justify-center p-4">
+        <div class="bg-[#0A0A0A] border border-[#222] w-full max-w-sm p-8 rounded-[3rem] relative overflow-hidden shadow-[0_0_100px_rgba(255,69,0,0.15)]">
+            <div class="absolute top-0 left-0 w-full h-1 bg-white"></div>
+            <h2 class="text-2xl font-black uppercase text-white mb-2 italic tracking-tighter">Novo Alimento</h2>
+            <p class="text-[10px] text-gray-500 font-bold uppercase tracking-widest mb-6">Referência: por cada 100g</p>
+            
+            <div class="mb-4">
+                <button onclick="document.getElementById('ocr-upload').click()" class="w-full py-3 bg-[#1A1A1A] border border-[#333] hover:border-[#00E5FF] text-[#00E5FF] rounded-2xl text-[10px] font-black uppercase flex items-center justify-center gap-2 transition-all cursor-pointer">
+                    <i data-lucide="camera" class="w-4 h-4"></i> Ler Tabela Nutricional (IA)
+                </button>
+                <input type="file" id="ocr-upload" accept="image/*" capture="environment" class="hidden" onchange="processNutritionLabel(event)">
+            </div>
+            
+            <div id="ocr-loading" class="hidden text-center mb-4 flex-col items-center">
+                <div class="w-6 h-6 border-2 border-[#00E5FF] border-t-transparent rounded-full animate-spin mb-2"></div>
+                <p class="text-[9px] font-black text-[#00E5FF] uppercase tracking-widest">Analisando imagem...</p>
+            </div>
+
             <div class="space-y-4 mb-8">
-                <input type="text" id="new-food-name" placeholder="Identificação do Alimento">
+                <div class="space-y-1">
+                    <label class="text-[9px] font-black uppercase text-gray-600 ml-2">Nome do Ingrediente</label>
+                    <input type="text" id="new-food-name" placeholder="Ex: Frango Grelhado" class="border-gray-800">
+                </div>
                 <div class="grid grid-cols-2 gap-3">
-                    <input type="number" id="new-food-p" placeholder="Prot (g)">
-                    <input type="number" id="new-food-c" placeholder="Carbo (g)">
-                    <input type="number" id="new-food-g" placeholder="Gord (g)">
-                    <input type="number" id="new-food-f" placeholder="Fibra (g)">
+                    <div class="space-y-1">
+                        <label class="text-[9px] font-black uppercase text-[#FF4500] ml-2">Prot (g)</label>
+                        <input type="number" id="new-food-p" placeholder="0" class="border-gray-800">
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-[9px] font-black uppercase text-[#9D00FF] ml-2">Carbo (g)</label>
+                        <input type="number" id="new-food-c" placeholder="0" class="border-gray-800">
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-[9px] font-black uppercase text-[#FFB800] ml-2">Gord (g)</label>
+                        <input type="number" id="new-food-g" placeholder="0" class="border-gray-800">
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-[9px] font-black uppercase text-[#00E5FF] ml-2">Fibra (g)</label>
+                        <input type="number" id="new-food-f" placeholder="0" class="border-gray-800">
+                    </div>
                 </div>
             </div>
             <div class="flex gap-4">
-                <button onclick="closeModal('modal-food')" class="flex-1 font-black text-gray-500 uppercase text-[11px] bg-transparent border-none">Cancelar</button>
-                <button onclick="saveNewFood()" class="flex-[2.5] py-5 bg-white text-black rounded-2xl font-black uppercase text-[11px] border-none">Salvar no BD</button>
+                <button onclick="closeModal('modal-food')" class="flex-1 font-black text-gray-500 uppercase text-[11px] bg-transparent border-none cursor-pointer">Sair</button>
+                <button onclick="saveNewFood()" class="flex-[2.5] py-5 bg-white text-black rounded-2xl font-black uppercase text-[11px] border-none shadow-xl hover:bg-gray-200 transition-all cursor-pointer">Salvar e Selecionar</button>
             </div>
         </div>
     </div>
@@ -438,11 +468,10 @@
 
             <div id="chat-loading-overlay" class="absolute inset-0 bg-black/80 z-50 hidden flex-col items-center justify-center backdrop-blur-sm">
                 <div class="w-12 h-12 border-4 border-[#FF4500] border-t-transparent rounded-full animate-spin mb-4"></div>
-                <p class="text-xs font-black text-white uppercase tracking-widest text-center px-4">Analisando Ingredientes e<br>Sincronizando com o Diário...</p>
+                <p class="text-xs font-black text-white uppercase tracking-widest text-center px-4">Processando Informações da IA...</p>
             </div>
 
-            <div id="chat-history" class="flex-1 overflow-y-auto p-6 space-y-6 custom-scroll bg-[#050505]">
-                </div>
+            <div id="chat-history" class="flex-1 overflow-y-auto p-6 space-y-6 custom-scroll bg-[#050505]"></div>
 
             <div class="p-4 bg-[#0D0D0D] border-t border-[#222]">
                 <form id="chat-form" class="flex gap-3">
@@ -495,19 +524,32 @@
 
         const GROQ_API_KEY = "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"; 
 
+        // --- FUNÇÃO AUXILIAR: LIMPEZA SEGURA DE JSON DA IA ---
+        // Agora blindada contra bugs no VS Code, usando manipulação de string pura sem Regex
+        function cleanJSONResponse(text) {
+            let clean = text.trim();
+            const mdTag = String.fromCharCode(96) + String.fromCharCode(96) + String.fromCharCode(96);
+            if (clean.indexOf(mdTag + 'json') === 0) {
+                clean = clean.substring(7);
+            } else if (clean.indexOf(mdTag) === 0) {
+                clean = clean.substring(3);
+            }
+            if (clean.lastIndexOf(mdTag) === clean.length - 3 && clean.length > 3) {
+                clean = clean.substring(0, clean.length - 3);
+            }
+            return clean.trim();
+        }
+
         // --- SISTEMA DE BUSCA APROXIMADA (FUZZY MATCHING) ---
         function getClosestFoodMatch(aiName, pantry) {
             aiName = aiName.toLowerCase().trim();
             
-            // 1. Match Exato
             let exact = pantry.find(f => f.name.toLowerCase().trim() === aiName);
             if (exact) return exact;
 
-            // 2. Match por Substring (Se a IA disser "Ovo Cozido" e na despensa for "Ovo Inteiro (Cozido)")
             let partial = pantry.find(f => f.name.toLowerCase().includes(aiName) || aiName.includes(f.name.toLowerCase()));
             if (partial) return partial;
 
-            // 3. Fallback: Pontuação por Palavras-chave
             let bestMatch = null;
             let bestScore = 0;
             pantry.forEach(f => {
@@ -515,7 +557,6 @@
                 let pName = f.name.toLowerCase();
                 let words = aiName.split(' ');
                 words.forEach(w => { 
-                    // Ignora palavras muito pequenas como "de", "com", "em"
                     if (w.length > 2 && pName.includes(w)) score++; 
                 });
                 if (score > bestScore) { 
@@ -527,9 +568,10 @@
             return bestScore > 0 ? bestMatch : null;
         }
 
-        // --- MOTOR MATEMÁTICO (LIMITES DE BOM SENSO) ---
+        // --- MOTOR MATEMÁTICO (LIMITES DE BOM SENSO E PUNIÇÃO) ---
         function getLimits(foodName) {
             const n = foodName.toLowerCase();
+            if (n.includes('aveia')) return { min: 10, max: 40 };
             if (n.includes('azeite') || n.includes('manteiga') || n.includes('pasta') || n.includes('óleo')) return { min: 10, max: 30 };
             if (n.includes('queijo') || n.includes('muçarela') || n.includes('cottage') || n.includes('parmesão')) return { min: 15, max: 60 };
             if (n.includes('leite') || n.includes('suco') || n.includes('iogurte') || n.includes('bebida')) return { min: 100, max: 300 };
@@ -541,7 +583,6 @@
         }
 
         function calculateOptimalWeights(foodNames, targetP, targetC, targetG) {
-            // Mapeia os nomes da IA para objetos reais da despensa usando o Fuzzy Match
             let foods = foodNames.map(n => getClosestFoodMatch(n, state.pantry)).filter(Boolean);
             if(foods.length === 0) return [];
             
@@ -563,9 +604,13 @@
                 let macroErr = pPen + cPen + gPen;
                 
                 let realismPenalty = wArr.reduce((acc, w, idx) => {
-                    const limits = getLimits(foods[idx].name);
+                    const fName = foods[idx].name.toLowerCase();
+                    const limits = getLimits(fName);
                     let pen = 0;
-                    if (w > limits.max) pen += Math.pow(w - limits.max, 2) * 10;
+                    if (w > limits.max) {
+                        const punishmentMultiplier = fName.includes('aveia') ? 1000000 : 10;
+                        pen += Math.pow(w - limits.max, 2) * punishmentMultiplier;
+                    }
                     if (w < limits.min) pen += Math.pow(limits.min - w, 2) * 10;
                     return acc + pen;
                 }, 0);
@@ -618,7 +663,6 @@
 
             return foods.map((f, i) => ({ nome: f.name, peso: weights[i] }));
         }
-
 
         // --- SISTEMA DE LOGIN ---
         document.getElementById('login-form').addEventListener('submit', async (e) => {
@@ -708,7 +752,7 @@
                 document.getElementById(`list-${t}`).innerHTML = logs.filter(l => l.turno === t).map(l => `
                     <div class="bg-[#141414] p-3 rounded-2xl border border-[#222] flex justify-between items-center group">
                         <div class="flex flex-col"><span class="text-[10px] font-black text-white italic uppercase">${l.name}</span><span class="text-[8px] text-gray-500">${Math.round(l.weight)}g • ${Math.round(l.kcal)} KCAL</span></div>
-                        <button onclick="deleteLog('${l.logId}')" class="opacity-0 group-hover:opacity-100 text-gray-600 hover:text-red-500 border-none bg-transparent"><i data-lucide="trash-2" class="w-3 h-3"></i></button>
+                        <button onclick="deleteLog('${l.logId}')" class="opacity-0 group-hover:opacity-100 text-gray-600 hover:text-red-500 border-none bg-transparent cursor-pointer"><i data-lucide="trash-2" class="w-3 h-3"></i></button>
                     </div>`).join('');
             });
             document.getElementById('streak-count').innerText = calculateStreak(state.user);
@@ -768,7 +812,7 @@
             alert(`Configuração Corporal Sincronizada!\n\nBF Estimado: ${bf.toFixed(1)}%\nMassa Magra: ${lbm.toFixed(1)}kg\nAlvo Kcal: ${Math.round(targetKcal)} kcal`);
         }
 
-        // --- SISTEMA DE CHAT IA COM MEMÓRIA LOCAL (LOCALSTORAGE) ---
+        // --- SISTEMA DE CHAT IA ---
         function formatMarkdown(text) {
             return text
                 .replace(/\*\*(.*?)\*\*/g, '<b class="text-[#00E5FF]">$1</b>') 
@@ -834,7 +878,6 @@
             if (saved) {
                 chatMessages = JSON.parse(saved);
                 document.getElementById('chat-history').innerHTML = '';
-                // Remonta o chat ignorando a primeira msg que é o 'system' invisível
                 chatMessages.forEach((msg, index) => {
                     if (msg.role !== 'system') {
                         appendChatBubble(msg.role, msg.content, index);
@@ -849,28 +892,25 @@
             if(confirm("Deseja apagar o histórico de conversa com a IA?")) {
                 chatMessages = [];
                 localStorage.removeItem(`vitality_chat_${state.user}`);
-                openChatAssistant(); // Vai cair no gerador de nova mensagem inicial
+                openChatAssistant(); 
             }
         }
 
         function openChatAssistant() {
-            // Tenta carregar a memória. Se não tiver nada, cria o prompt inicial.
             if (!loadChatFromLocal() || chatMessages.length === 0) {
                 const user = state.data[state.user]; 
                 const logs = user.logs[state.selectedDate] || [];
                 let curP=0, curC=0, curG=0; logs.forEach(l => { curP+=l.p; curC+=l.c; curG+=l.g; });
                 const gapP = Math.max(0, user.p - curP); const gapC = Math.max(0, user.c - curC); const gapG = Math.max(0, user.g - curG);
-                
                 const pantryData = state.pantry.map(f => f.name).join('; ');
 
-                const sysPrompt = `Você é o "Vitality IA", um Chef de Cozinha Nutricional de elite. 
-                Contexto: Faltam P: ${gapP.toFixed(1)}g, C: ${gapC.toFixed(1)}g, G: ${gapG.toFixed(1)}g.
-                Despensa disponível: ${pantryData}.
-                REGRAS ABSOLUTAS:
-                - NÃO TENTE CALCULAR AS GRAMATURAS EM HIPÓTESE NENHUMA. O sistema Javascript fará a matemática exata.
-                - Você deve APENAS sugerir ALIMENTOS que combinam entre si. Liste CLARAMENTE os nomes.
-                - Não misture doces (Whey/Leite) com pratos salgados de almoço/jantar.
-                - NUNCA use blocos de código markdown (como \`\`\`json).`;
+                const sysPrompt = "Você é o Vitality IA, um Chef Nutricional.\n" +
+                "Contexto: Faltam P: " + gapP.toFixed(1) + "g, C: " + gapC.toFixed(1) + "g, G: " + gapG.toFixed(1) + "g.\n" +
+                "Despensa: " + pantryData + "\n" +
+                "REGRAS:\n" +
+                "- Não calcule gramaturas.\n" +
+                "- Sugira alimentos que combinam da despensa.\n" +
+                "- Nunca use blocos de código.";
 
                 chatMessages = [{ role: 'system', content: sysPrompt }];
                 document.getElementById('chat-history').innerHTML = ''; 
@@ -880,7 +920,6 @@
                 appendChatBubble('assistant', welcomeMsg, chatMessages.length - 1);
                 saveChatToLocal();
             }
-            
             document.getElementById('modal-chat').classList.remove('hidden');
         }
 
@@ -922,13 +961,12 @@
                 saveChatToLocal();
 
             } catch (error) {
-                console.error(error);
                 document.getElementById('typing-indicator').remove();
-                appendChatBubble('assistant', `**Erro de Conexão:** Não consegui acessar o servidor clínico. Tente novamente.`);
+                appendChatBubble('assistant', `**Erro de Conexão:** Não consegui acessar o servidor clínico.`);
             }
         });
 
-        // --- BOTÃO MÁGICO: LER TEXTO -> JS SOLVER (C/ FUZZY MATCH) -> DIÁRIO ---
+        // --- BOTÃO MÁGICO: AUTO-COMPLETAR ---
         async function extractAndApplyChat(msgIndex) {
             const textContent = chatMessages[msgIndex].content;
             if (!textContent) return;
@@ -939,13 +977,8 @@
 
             const pantryData = state.pantry.length > 0 ? JSON.stringify(state.pantry.map(f => f.name)) : "[]";
             
-            const systemPrompt = "Você é um extrator de dados estrito. Retorne APENAS JSON válido. Ignore pesos/gramaturas.";
-            const userPrompt = `Leia o texto sugerido pelo Chef e extraia APENAS os nomes dos ingredientes.
-            Texto: "${textContent}"
-            Turnos: 'morning', 'lunch', 'dinner'.
-            Nomes da despensa de referência: ${pantryData}. Extraia o nome da forma como foi escrito no texto.
-            Formato: {"cardapio": [{"turno": "morning", "alimentos": ["Ovo cozido", "Pão"]}]}
-            Se não houver refeição clara, retorne {"cardapio": []}.`;
+            const systemPrompt = "Você é um extrator de dados estrito. Retorne APENAS JSON válido.";
+            const userPrompt = "Leia o texto: '" + textContent + "'. Turnos permitidos: 'morning', 'lunch', 'dinner'. Despensa: " + pantryData + ". Formato exato: {\"cardapio\": [{\"turno\": \"morning\", \"alimentos\": [\"Ovo cozido\"]}]}";
 
             try {
                 const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
@@ -968,16 +1001,15 @@
                 if (!response.ok) throw new Error("Erro na Extração JSON");
 
                 const result = await response.json();
-                let jsonText = result.choices[0].message.content.trim();
-                jsonText = jsonText.replace(/^```json/i, '').replace(/```$/i, '').trim();
                 
+                // Limpeza segura sem Regex
+                const jsonText = cleanJSONResponse(result.choices[0].message.content);
                 const parsed = JSON.parse(jsonText);
                 const turnos = parsed.cardapio || [];
 
                 if (turnos.length === 0) {
                     alert("A IA não identificou nenhuma lista clara de alimentos para injetar.");
                 } else {
-                    
                     const user = state.data[state.user]; 
                     const logs = user.logs[state.selectedDate] || [];
                     let curP=0, curC=0, curG=0; logs.forEach(l => { curP+=l.p; curC+=l.c; curG+=l.g; });
@@ -993,7 +1025,6 @@
                     
                     turnos.forEach(s => {
                         let safeTurno = ['morning', 'lunch', 'dinner'].includes(s.turno) ? s.turno : 'lunch';
-                        
                         let mealTargetP = runP / mealsLeft;
                         let mealTargetC = runC / mealsLeft;
                         let mealTargetG = runG / mealsLeft;
@@ -1001,9 +1032,7 @@
                         let optimized = calculateOptimalWeights(s.alimentos, mealTargetP, mealTargetC, mealTargetG);
                         
                         optimized.forEach(a => {
-                            // Aqui usa a nova Busca Aproximada em vez de ===
                             const foodObj = getClosestFoodMatch(a.nome, state.pantry);
-                            
                             if(foodObj && a.peso > 0) {
                                 const factor = a.peso / 100;
                                 state.data[state.user].logs[state.selectedDate].push({
@@ -1031,10 +1060,10 @@
                         saveState(); 
                         updateUI();
                         renderCalendar(); 
-                        alert(`Mágica feita! ${addedCount} alimento(s) foram injetados no seu diário com gramaturas perfeitas para bater a meta.`);
+                        alert(`Mágica feita! ${addedCount} alimento(s) injetados.`);
                         closeModal('modal-chat');
                     } else {
-                        alert("Não foi possível gerar gramaturas para os itens extraídos. Verifique se eles existem na sua despensa.");
+                        alert("Não foi possível gerar gramaturas. Verifique se os itens existem na despensa.");
                     }
                 }
             } catch (error) {
@@ -1044,6 +1073,67 @@
                 overlay.classList.add('hidden');
                 overlay.classList.remove('flex');
             }
+        }
+
+        // --- SISTEMA DE VISÃO COMPUTACIONAL (OCR) PARA TABELA NUTRICIONAL ---
+        async function processNutritionLabel(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            document.getElementById('ocr-loading').classList.remove('hidden');
+            document.getElementById('ocr-loading').classList.add('flex');
+
+            const reader = new FileReader();
+            reader.onloadend = async () => {
+                const base64Image = reader.result;
+
+                try {
+                    const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${GROQ_API_KEY}`
+                        },
+                        body: JSON.stringify({
+                            model: "llama-3.2-90b-vision-preview",
+                            messages: [
+                                {
+                                    role: "user",
+                                    content: [
+                                        { type: "text", text: "Analise esta tabela nutricional. Extraia os valores de Proteína, Carboidrato, Gordura Total e Fibra por 100g. Retorne APENAS JSON no formato: {\"p\": 20, \"c\": 10, \"g\": 5, \"f\": 2}. Use números decimais com ponto." },
+                                        { type: "image_url", image_url: { url: base64Image } }
+                                    ]
+                                }
+                            ],
+                            temperature: 0.1,
+                            response_format: { type: "json_object" }
+                        })
+                    });
+
+                    if (!response.ok) throw new Error("Erro na API de Visão");
+
+                    const result = await response.json();
+                    
+                    // Limpeza segura
+                    const jsonText = cleanJSONResponse(result.choices[0].message.content);
+                    const parsed = JSON.parse(jsonText);
+
+                    if (parsed.p !== undefined) document.getElementById('new-food-p').value = parsed.p;
+                    if (parsed.c !== undefined) document.getElementById('new-food-c').value = parsed.c;
+                    if (parsed.g !== undefined) document.getElementById('new-food-g').value = parsed.g;
+                    if (parsed.f !== undefined) document.getElementById('new-food-f').value = parsed.f || 0;
+
+                    alert("Tabela processada com sucesso pela IA!");
+                } catch (error) {
+                    console.error("Erro OCR:", error);
+                    alert("Falha ao ler a imagem. A foto pode estar embaçada.");
+                } finally {
+                    document.getElementById('ocr-loading').classList.add('hidden');
+                    document.getElementById('ocr-loading').classList.remove('flex');
+                    event.target.value = ''; 
+                }
+            };
+            reader.readAsDataURL(file);
         }
 
         // --- SISTEMA DE FILTRO DA DESPENSA ---
@@ -1083,25 +1173,34 @@
                 filtered.sort((a, b) => a.name.localeCompare(b.name));
             }
 
-            document.getElementById('pantry-render').innerHTML = filtered.map(f => {
-                const kcal = Math.round(f.p*4 + f.c*4 + f.g*9);
-                return `
-                <div onclick="openFood(${f.id})" class="p-4 bg-[#141414] border border-[#222] rounded-2xl cursor-pointer hover:border-[#FF4500] transition-colors flex flex-col gap-2 shadow-sm">
-                    <div class="flex justify-between items-start">
-                        <span class="text-[11px] font-black uppercase text-white">${f.name}</span>
-                        <span class="text-[9px] font-black text-gray-500 bg-[#1A1A1A] px-2 py-0.5 rounded-md">${kcal} KCAL</span>
-                    </div>
-                    <div class="flex gap-3 text-[9px] font-black uppercase tracking-widest mt-1">
-                        <span class="text-[#FF4500]">P: ${f.p}g</span>
-                        <span class="text-[#9D00FF]">C: ${f.c}g</span>
-                        <span class="text-[#FFB800]">G: ${f.g}g</span>
-                        <span class="text-[#00E5FF]">F: ${f.f || 0}g</span>
-                    </div>
-                </div>`;
-            }).join('');
+            const pantryRender = document.getElementById('pantry-render');
+            
+            if (filtered.length === 0 && term.length > 2) {
+                pantryRender.innerHTML = `
+                    <div class="p-6 border border-dashed border-[#333] rounded-3xl text-center bg-[#0a0a0a]">
+                        <p class="text-[10px] font-bold text-gray-500 uppercase mb-4 tracking-widest italic">"${term}" não encontrado</p>
+                        <button onclick="openAddFoodModalWithTerm('${term}')" class="px-6 py-3 bg-white text-black rounded-xl text-[10px] font-black uppercase shadow-[0_0_15px_rgba(255,255,255,0.1)] cursor-pointer">Cadastrar Agora</button>
+                    </div>`;
+            } else {
+                pantryRender.innerHTML = filtered.map(f => {
+                    const kcal = Math.round(f.p*4 + f.c*4 + f.g*9);
+                    return `
+                    <div onclick="openFood(${f.id})" class="p-4 bg-[#141414] border border-[#222] rounded-2xl cursor-pointer hover:border-[#FF4500] transition-colors flex flex-col gap-2 shadow-sm">
+                        <div class="flex justify-between items-start">
+                            <span class="text-[11px] font-black uppercase text-white">${f.name}</span>
+                            <span class="text-[9px] font-black text-gray-500 bg-[#1A1A1A] px-2 py-0.5 rounded-md">${kcal} KCAL</span>
+                        </div>
+                        <div class="flex gap-3 text-[9px] font-black uppercase tracking-widest mt-1">
+                            <span class="text-[#FF4500]">P: ${f.p}g</span>
+                            <span class="text-[#9D00FF]">C: ${f.c}g</span>
+                            <span class="text-[#FFB800]">G: ${f.g}g</span>
+                            <span class="text-[#00E5FF]">F: ${f.f || 0}g</span>
+                        </div>
+                    </div>`;
+                }).join('');
+            }
         }
 
-        // --- SISTEMA DE CALENDÁRIO COM ATUALIZAÇÃO DINÂMICA ---
         function renderCalendar() {
             const grid = document.getElementById('calendar-grid'); grid.innerHTML = '';
             const days = new Date(state.currentYear, state.currentMonth + 1, 0).getDate();
@@ -1125,7 +1224,6 @@
             }
         }
 
-        // --- EVENTOS QUE AFETAM O CALENDÁRIO E DIÁRIO ---
         function clearDayLogs() {
             if(confirm("Tem certeza que deseja apagar todas as refeições deste dia?")) {
                 state.data[state.user].logs[state.selectedDate] = [];
@@ -1145,26 +1243,37 @@
         }
         function deleteLog(id) { state.data[state.user].logs[state.selectedDate] = state.data[state.user].logs[state.selectedDate].filter(l => l.logId !== id); saveState(); updateUI(); renderCalendar(); }
 
-        // --- FUNÇÕES AUXILIARES PADRÕES ---
         function switchUser(u) { 
             state.user = u; 
             document.documentElement.style.setProperty('--p-orange', u === 'victor' ? '#FF4500' : '#9D00FF'); 
             document.getElementById('hip-container').className = u === 'rafaela' ? 'flex flex-col gap-1 text-[10px] font-black uppercase text-gray-500' : 'hidden';
             updateUI(); 
             renderCalendar(); 
-            loadChatFromLocal(); // Tenta puxar a memoria do chat do usuario que entrou
+            loadChatFromLocal();
         }
 
         function openFood(id) { state.activeFood = state.pantry.find(x => x.id === id); document.getElementById('m-name').innerText = state.activeFood.name; document.getElementById('modal').classList.remove('hidden'); }
         function openAddFoodModal() { document.getElementById('modal-food').classList.remove('hidden'); }
         
+        function openAddFoodModalWithTerm(term) {
+            document.getElementById('new-food-name').value = term;
+            openAddFoodModal();
+        }
+
         function saveNewFood() {
             const name = document.getElementById('new-food-name').value;
             const p = parseFloat(document.getElementById('new-food-p').value) || 0;
             const c = parseFloat(document.getElementById('new-food-c').value) || 0;
             const g = parseFloat(document.getElementById('new-food-g').value) || 0;
             const f = parseFloat(document.getElementById('new-food-f').value) || 0;
-            if(!name) return; state.pantry.push({ id: Date.now(), name, p, c, g, f }); saveState(); renderPantry(); closeModal('modal-food');
+            if(!name) return; 
+            
+            const newId = Date.now();
+            state.pantry.push({ id: newId, name, p, c, g, f }); 
+            saveState(); 
+            renderPantry(); 
+            closeModal('modal-food');
+            openFood(newId);
         }
         
         function calculateStreak(u) { return state.data[u].streak || 0; }
@@ -1184,18 +1293,17 @@
             yesterday.setDate(yesterday.getDate() - 1);
             const ds = yesterday.toISOString().split('T')[0];
             const logs = state.data[state.user].logs[ds] || [];
-            if(logs.length === 0) return alert("Nenhuma refeição registrada ontem.");
+            if(logs.length === 0) return alert("Nenhuma refeição registada ontem.");
             
             if(!state.data[state.user].logs[state.selectedDate]) state.data[state.user].logs[state.selectedDate] = [];
             
-            // Copia gerando novos IDs para não conflitar chaves
             logs.forEach(l => {
                 const newLog = {...l, logId: Date.now().toString() + Math.random().toString(36).substr(2, 5)};
                 state.data[state.user].logs[state.selectedDate].push(newLog);
             });
             
             saveState(); updateUI(); renderCalendar();
-            alert("Cardápio de ontem duplicado com sucesso!");
+            alert("Cardápio duplicado com sucesso!");
         }
 
         function changeMonth(o) { state.currentMonth += o; if(state.currentMonth>11){state.currentMonth=0;state.currentYear++} if(state.currentMonth<0){state.currentMonth=11;state.currentYear--} updateMonthDisplay(); renderCalendar(); }
